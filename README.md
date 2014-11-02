@@ -5,7 +5,7 @@
 > An attempt to build Cryptocat desktop apps for all platforms by bundling them via [node-webkit](https://github.com/rogerwang/node-webkit) and utilizing [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater) for auto-updating.
 
 # Current status: 
-**WIP!** see [src/node-webkit/README.md](src/node-webkit/README.md).
+**WIP!** see [src/node-webkit](src/node-webkit).
 
 ###Browser-based app for easy to use, accessible encrypted chat.
 Cryptocat is an experimental browser-based chat client for easy to use, encrypted conversations. It aims to make encrypted, private chat easy to use and accessible. We want to break down the barrier that prevents the general public from having an accessible privacy alternative that they already know how to use. Cryptocat is currently available for Chrome, Firefox, Safari, Opera, OS X and iPhone. It uses the [OTR](http://www.cypherpunks.ca/otr/) protocol over XMPP for encrypted two-party chat and the (upcoming) mpOTR protocol for encrypted multi-party chat.
