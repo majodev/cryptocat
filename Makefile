@@ -50,6 +50,7 @@ mac:
 	@/bin/echo "[Cryptocat] Mac app available in release/"
 
 node-webkit:
+	@make cryptojs
 	@/bin/echo "[Cryptocat] Bundling for node-webkit src/node-webkit/Gruntfile.js..."
 	@cd src/node-webkit && npm install -d && grunt
 	@/bin/echo "[Cryptocat] node-webkit apps available in release/"
