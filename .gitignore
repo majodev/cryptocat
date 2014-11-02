@@ -2,9 +2,11 @@
 src/cryptocat.safariextension/*
 src/firefox/chrome/content/data/*
 release/
+tmp/
 
 # npm
 node_modules/
+src/node-webkit/node_modules/
 
 # IDE files
 .idea/

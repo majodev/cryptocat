@@ -49,6 +49,11 @@ mac:
 	@cd release && zip -q -r9 cryptocat.mac.zip Cryptocat.app
 	@/bin/echo "[Cryptocat] Mac app available in release/"
 
+node-webkit:
+	@/bin/echo "[Cryptocat] Bundling for node-webkit src/node-webkit/Gruntfile.js..."
+	@cd src/node-webkit && npm install -d && grunt
+	@/bin/echo "[Cryptocat] node-webkit apps available in release/"
+
 tests:
 	@/bin/echo -n "[Cryptocat] Running tests... "
 	@`/usr/bin/which npm` install
