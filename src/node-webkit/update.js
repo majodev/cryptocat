@@ -20,15 +20,19 @@
 	var upd = new Updater(pkg)
 	var copyPath, execPath
 
+	// force show devtools
+	gui.Window.get().showDevTools()
+	gui.Window.get().focus()
+
+
 	function setUIStatus(text) {
 		$('#updateStatus').text(text)
 	}
 
 	function loadMainApplication() {
-		setUIStatus('Update procedure finished, launching...')
 		setTimeout(function() {
 			window.location.href = 'index.html'
-		}, 1000)
+		}, 1500)
 	}
 
 	// Args passed when new app is launched from temp dir during update
@@ -72,12 +76,23 @@
 
 			if (!newVersionExists) {
 				// running the most up to date version of cryptocat
+				setUIStatus('Update procedure FINISHED, launching...')
 				loadMainApplication();
 				return
 			}
 
 			// ------------- Step 2 -------------
-			setUIStatus('A newer version is available, downloading...')
+			setUIStatus('Cryptocat ' + manifest.version + ' is available!')
+
+			if (window.confirm('Cryptocat ' + manifest.version + ' is available!\nDo you want to update now?') !== true) {
+				// user decided to update later!
+				// run the older version even tough a newer version was found
+				setUIStatus('Update procedure ABORTED, launching...')
+				loadMainApplication();
+				return
+			}
+
+			setUIStatus('Downloading Cryptocat ' + manifest.version + '...')
 			upd.download(function(error, filename) {
 
 				if (error) {
@@ -86,7 +101,7 @@
 				}
 
 				// ------------- Step 3 -------------
-				setUIStatus('Unpacking newer version...')
+				setUIStatus('Unpacking Cryptocat ' + manifest.version + '...')
 				upd.unpack(filename, function(error, newAppPath) {
 
 					if (error) {

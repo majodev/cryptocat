@@ -69,8 +69,8 @@ module.exports = function(grunt) {
 
 		'nodewebkit': { // build the apps from temp build folder src
 			options: {
-				// platforms: ['win', 'osx', 'linux32', 'linux64'],
-				platforms: ['osx'],
+				platforms: ['win', 'osx', 'linux32', 'linux64'],
+				// platforms: ['osx'],
 				buildDir: DIRS.RELEASE,
 				cacheDir: DIRS.CACHE,
 				macIcns: DIRS.NWASSETS + 'Cryptocat.icns',
@@ -106,39 +106,39 @@ module.exports = function(grunt) {
 					src: ['**']
 				}]
 			},
-			// win: {
-			// 	options: {
-			// 		archive: DIRS.RELEASE + 'Cryptocat_win.zip',
-			// 		mode: 'zip'
-			// 	},
-			// 	files: [{
-			// 		expand: true,
-			// 		cwd: DIRS.RELEASE + 'Cryptocat/win/',
-			// 		src: ['**']
-			// 	}]
-			// },
-			// linux32: {
-			// 	options: {
-			// 		archive: DIRS.RELEASE + 'Cryptocat_linux32.tar.gz',
-			// 		mode: 'tgz'
-			// 	},
-			// 	files: [{
-			// 		expand: true,
-			// 		cwd: DIRS.RELEASE + 'Cryptocat/linux32/',
-			// 		src: ['**']
-			// 	}]
-			// },
-			// linux64: {
-			// 	options: {
-			// 		archive: DIRS.RELEASE + 'Cryptocat_linux64.tar.gz',
-			// 		mode: 'tgz'
-			// 	},
-			// 	files: [{
-			// 		expand: true,
-			// 		cwd: DIRS.RELEASE + 'Cryptocat/linux64/',
-			// 		src: ['**']
-			// 	}]
-			// }
+			win: {
+				options: {
+					archive: DIRS.RELEASE + 'Cryptocat_win.zip',
+					mode: 'zip'
+				},
+				files: [{
+					expand: true,
+					cwd: DIRS.RELEASE + 'Cryptocat/win/',
+					src: ['**']
+				}]
+			},
+			linux32: {
+				options: {
+					archive: DIRS.RELEASE + 'Cryptocat_linux32.tar.gz',
+					mode: 'tgz'
+				},
+				files: [{
+					expand: true,
+					cwd: DIRS.RELEASE + 'Cryptocat/linux32/',
+					src: ['**']
+				}]
+			},
+			linux64: {
+				options: {
+					archive: DIRS.RELEASE + 'Cryptocat_linux64.tar.gz',
+					mode: 'tgz'
+				},
+				files: [{
+					expand: true,
+					cwd: DIRS.RELEASE + 'Cryptocat/linux64/',
+					src: ['**']
+				}]
+			}
 		}
 
 	})

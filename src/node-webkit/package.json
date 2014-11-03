@@ -1,6 +1,6 @@
 {
 	"name": "Cryptocat",
-	"version": "2.2.2",
+	"version": "2.2.1",
 	"description": "Web Instant Messaging App With Accessible Encryption",
 	"keywords": [
 		"encryption",
@@ -13,7 +13,7 @@
 	"main": "update.html",
 	"window": {
 		"title": "Cryptocat",
-		"toolbar": true,
+		"toolbar": false,
 		"frame": true,
 		"width": 772,
 		"height": 640,
@@ -22,19 +22,19 @@
 		"resizable": false,
 		"icon": "nwassets/icon-128.png"
 	},
-	"manifestUrl": "http://localhost:3000/package.json",
+	"manifestUrl": "https://raw.githubusercontent.com/majodev/cryptocat/master/src/node-webkit/package.json",
 	"packages": {
 		"mac": {
-			"url": "http://localhost:3000/Cryptocat_mac.zip"
+			"url": "https://dl.dropboxusercontent.com/u/2624630/sjgrabber_test/Cryptocat_mac.zip"
 		},
 		"win": {
-			"url": "http://localhost:3000/Cryptocat_win.zip"
+			"url": "https://dl.dropboxusercontent.com/u/2624630/sjgrabber_test/Cryptocat_win.zip"
 		},
 		"linux32": {
-			"url": "http://localhost:3000/Cryptocat_linux32.tar.gz"
+			"url": "https://dl.dropboxusercontent.com/u/2624630/sjgrabber_test/Cryptocat_linux32.tar.gz"
 		},
 		"linux64": {
-			"url": "http://localhost:3000/Cryptocat_linux64.tar.gz"
+			"url": "https://dl.dropboxusercontent.com/u/2624630/sjgrabber_test/Cryptocat_linux64.tar.gz"
 		}
 	},
 	"dependencies": {
