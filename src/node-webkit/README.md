@@ -38,7 +38,7 @@ I've only tested the update procedure with mac and windows "fake" versions, it m
 
 ## Bugs
 - *fatal error*: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` can freeze app (to reproduce: 1. join any room, 2. send some messages, 3. leave, 4. error)
-- *bug*: No sounds are currently played, mp3 support needs a library shipped with node-webkit, `.ogg` should be preferred
+- ~~*bug*: No sounds are currently played, mp3 support needs a library shipped with node-webkit, `.ogg` should be preferred~~ fixed by always using `.ogg` when running Cryptocat in node-webkit ([see cryptocat.js line 29](https://github.com/majodev/cryptocat/blob/master/src/core/js/cryptocat.js#L29))
 - Windows app needs to be relaunched after update completed
 - Update procedure might download a `.zip` that cannot be unzipped
 

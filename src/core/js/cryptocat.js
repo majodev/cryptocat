@@ -26,8 +26,8 @@ Cryptocat.me = {
 Cryptocat.buddies = {}
 
 Cryptocat.audioExt = '.mp3'
-if (navigator.userAgent.match(/(OPR)|(Firefox)/)) {
-	Cryptocat.audioExt = '.ogg'
+if (navigator.userAgent.match(/(OPR)|(Firefox)/) || typeof process === 'object') {
+	Cryptocat.audioExt = '.ogg' // Firefox, opera and node-webkit should use .ogg
 }
 Cryptocat.sounds = {
 	'keygenStart': (new Audio('snd/keygenStart' + Cryptocat.audioExt)),
