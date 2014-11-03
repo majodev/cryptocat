@@ -10,13 +10,13 @@
 	],
 	"author": "Nadim Kobeissi <nadim@crypto.cat>",
 	"license": "AGPL3",
-	"main": "index.html",
+	"main": "update.html",
 	"window": {
 		"title": "Cryptocat",
-		"toolbar": false,
+		"toolbar": true,
 		"frame": true,
-		"width": 735,
-		"height": 610,
+		"width": 772,
+		"height": 640,
 		"min_width": 735,
 		"min_height": 610,
 		"resizable": false,
@@ -25,16 +25,16 @@
 	"manifestUrl": "http://localhost:3000/package.json",
 	"packages": {
 		"mac": {
-			"url": "http://localhost:3000/releases/updapp/mac/updapp.zip"
+			"url": "http://localhost:3000/Cryptocat_mac.zip"
 		},
 		"win": {
-			"url": "http://localhost:3000/releases/updapp/win/updapp.zip"
+			"url": "http://localhost:3000/Cryptocat_win.zip"
 		},
 		"linux32": {
-			"url": "http://localhost:3000/releases/updapp/linux32/updapp.tar.gz"
+			"url": "http://localhost:3000/Cryptocat_linux32.tar.gz"
 		},
 		"linux64": {
-			"url": "http://localhost:3000/releases/updapp/linux64/updapp.tar.gz"
+			"url": "http://localhost:3000/Cryptocat_linux64.tar.gz"
 		}
 	},
 	"dependencies": {
@@ -43,7 +43,9 @@
 	"devDependencies": {
 		"grunt": "^0.4.5",
 		"grunt-contrib-clean": "^0.6.0",
+		"grunt-contrib-compress": "^0.12.0",
 		"grunt-contrib-copy": "^0.7.0",
+		"grunt-contrib-watch": "^0.6.1",
 		"grunt-node-webkit-builder": "^0.2.3",
 		"grunt-update-json": "^0.2.1"
 	}
