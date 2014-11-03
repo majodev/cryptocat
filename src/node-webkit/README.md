@@ -3,16 +3,30 @@
 > Desktop apps utilize [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater) to receive automatic updates.
 
 ## Status
-Early prototype working.
-No sound, errors in cryptocat-core might freeze node-webkit.
+**WIP, don't use this for anything apart from testing purposes!**  
+Early prototype working (errors might freeze app).
 
-## TODO
-1. ~~Perform platform builds into `/release` via automated grunt task~~ done.
-2. ~~Desktop apps can check if they are running the most up-to-date version of Cryptocat~~ done.
-3. ~~Desktop apps fetch a github-hosted `package.json` file in a [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater)s' compatible manifest format, download the newer version and execute a self-update procedure~~ done.
-4. Update app on all platforms **securely (SSL + SHASUMs + ???)**
-5. Fix errors that would that may stall the desktop app
-6. Essential UI improvements at desktop only
+## Roadmap
+1. ~~Perform platform builds into `/release` via automated grunt task~~ *done*.
+2. ~~Desktop apps can check if they are running the most up-to-date version of Cryptocat~~ *done*.
+3. ~~Desktop apps fetch a github-hosted `package.json` file in a [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater)s' compatible manifest format, download the newer version and execute a self-update procedure~~ *done*.
+4. Update app on all platforms **securely**
+  - Manifest (`package.json`) must be hosted on a SSL enabled server.
+  - Force downloading new versions only from trusted SLL connections.
+  - SHASUMs?
+  - MITM attacks?
+5. Fix errors in `cryptocat.js` that may stall the node-webkit engine ([**without** globally catching uncaught exceptions](https://github.com/rogerwang/node-webkit/issues/1699))
+  - `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)`
+  - Are there more?
+6. Essential UI improvements
+  - ~~Use `.ogg` instead of `.mp3` in node-webkit~~ ([learn why](https://github.com/rogerwang/node-webkit/wiki/Using-MP3-%26-MP4-%28H.264%29-using-the--video--%26--audio--tags.))
+  - Should auto-update really be a separate view during startup?
+  - Do we need a tray-icon? (it feels akward that the whole app closes, if one window gets closed)
+  - How to do desktop chat notifications?
+  - Multiple chat session windows?
+7. Installation routines
+  - Provide `.dmg` on OS X?
+  - Provide installer on Windows (we cannot risk to install Cryptocat into `Program files`, [see why here](https://github.com/edjafarov/node-webkit-updater/issues/58))
 
 ## Let me **test** this with some prebuild binaries!
 OK, here's are some "fake v2.2.1"-Cryptocat binaries to test the update procedure:
