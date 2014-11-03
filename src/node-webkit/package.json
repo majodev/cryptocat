@@ -1,6 +1,6 @@
 {
 	"name": "Cryptocat",
-	"version": "2.2.2",
+	"version": "2.2.1",
 	"description": "Web Instant Messaging App With Accessible Encryption",
 	"keywords": [
 		"encryption",
@@ -15,8 +15,8 @@
 		"title": "Cryptocat",
 		"toolbar": false,
 		"frame": true,
-		"width": 772,
-		"height": 640,
+		"width": 735,
+		"height": 610,
 		"min_width": 735,
 		"min_height": 610,
 		"resizable": false,

@@ -24,8 +24,12 @@
 	gui.Window.get().showDevTools()
 	gui.Window.get().focus()
 
+	// hide buttons in the beginning
+	$('.updateButtons').hide()
+
 
 	function setUIStatus(text) {
+		console.log(text);
 		$('#updateStatus').text(text)
 	}
 
@@ -38,7 +42,7 @@
 	// Args passed when new app is launched from temp dir during update
 	if (gui.App.argv.length) {
 		// ------------- Step 5 -------------
-		setUIStatus('Launching new version from tmp')
+		setUIStatus('Launching new version from tmp...')
 		copyPath = gui.App.argv[0]
 		execPath = gui.App.argv[1]
 
@@ -47,7 +51,7 @@
 
 			if (error) {
 				setUIStatus('error: ' + error)
-				return
+				return false
 			}
 
 			// ------------- Step 6 -------------
@@ -68,7 +72,7 @@
 
 			if (error) {
 				setUIStatus('error: ' + error)
-				return
+				return false
 			}
 
 			// supply user with info of the remote version
@@ -77,46 +81,63 @@
 			if (!newVersionExists) {
 				// running the most up to date version of cryptocat
 				setUIStatus('Update procedure FINISHED, launching...')
-				loadMainApplication();
-				return
+				loadMainApplication()
+				return false
 			}
 
 			// ------------- Step 2 -------------
 			setUIStatus('Cryptocat ' + manifest.version + ' is available!')
 
-			if (window.confirm('Cryptocat ' + manifest.version + ' is available!\nDo you want to update now?') !== true) {
+			$('.updateButtons').show()
+
+			$('#abortUpdate').on('click', function() {
 				// user decided to update later!
 				// run the older version even tough a newer version was found
+				$('.updateButtons').hide()
 				setUIStatus('Update procedure ABORTED, launching...')
-				loadMainApplication();
-				return
-			}
+				loadMainApplication()
+				return false
+			})
 
-			setUIStatus('Downloading Cryptocat ' + manifest.version + '...')
-			upd.download(function(error, filename) {
+			$('#installUpdate').on('click', function() {
+				// user decided to update now!
+				$('.updateButtons').hide()
+				setUIStatus('Downloading Cryptocat ' + manifest.version + '...')
 
-				if (error) {
-					setUIStatus('error: ' + error)
-					return
-				}
-
-				// ------------- Step 3 -------------
-				setUIStatus('Unpacking Cryptocat ' + manifest.version + '...')
-				upd.unpack(filename, function(error, newAppPath) {
+				var loaded = 0;
+				var newVersion = upd.download(function(error, filename) {
 
 					if (error) {
 						setUIStatus('error: ' + error)
-						return
+						return false
 					}
 
-					// ------------- Step 4 -------------
-					setUIStatus('Running installer...')
-					upd.runInstaller(newAppPath, [upd.getAppPath(), upd.getAppExec()], {})
-					gui.App.quit()
+					// ------------- Step 3 -------------
+					setUIStatus('Unpacking Cryptocat ' + manifest.version + '...')
+					upd.unpack(filename, function(error, newAppPath) {
+
+						if (error) {
+							setUIStatus('error: ' + error)
+							return false
+						}
+
+						// ------------- Step 4 -------------
+						setUIStatus('Running installer...')
+						upd.runInstaller(newAppPath, [upd.getAppPath(), upd.getAppExec()], {})
+						gui.App.quit()
+
+					}, manifest)
 
 				}, manifest)
 
-			}, manifest)
+				newVersion.on('data', function(chunk) {
+					loaded += chunk.length;
+					setUIStatus('Downloading Cryptocat ' + manifest.version + '... (' + Math.floor(loaded / newVersion['content-length'] * 100) + '%)')
+				})
+
+			})
+
+
 
 		})
 	}
