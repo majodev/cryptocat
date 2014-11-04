@@ -35,7 +35,7 @@
 
 	function loadMainApplication() {
 		setTimeout(function() {
-			window.location.href = 'index.html'
+			window.location.href = 'app/index.html'
 		}, 1500)
 	}
 

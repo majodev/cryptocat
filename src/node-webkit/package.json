@@ -11,6 +11,7 @@
 	"author": "Nadim Kobeissi <nadim@crypto.cat>",
 	"license": "AGPL3",
 	"main": "update.html",
+	"node-main": "nodeMain.js",
 	"window": {
 		"title": "Cryptocat",
 		"toolbar": false,
@@ -20,7 +21,7 @@
 		"min_width": 735,
 		"min_height": 610,
 		"resizable": false,
-		"icon": "nwassets/icon-128.png"
+		"icon": "assets/icon-128.png"
 	},
 	"manifestUrl": "https://raw.githubusercontent.com/majodev/cryptocat/master/src/node-webkit/package.json",
 	"packages": {

@@ -18,6 +18,7 @@ Early prototype working (errors might freeze app).
 5. Fix errors in `cryptocat.js` that may stall the node-webkit engine ([**without** globally catching uncaught exceptions](https://github.com/rogerwang/node-webkit/issues/1699))
   - `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)`
   - Are there more?
+  - All errors are currently globally catched and logged to `YOUR_HOMEDIR/cryptocat-node-webkit-errors.log`
 6. Essential UI improvements
   - ~~Use `.ogg` instead of `.mp3` in node-webkit~~ ([learn why](https://github.com/rogerwang/node-webkit/wiki/Using-MP3-%26-MP4-%28H.264%29-using-the--video--%26--audio--tags.))
   - Should auto-update really be a separate view during startup?

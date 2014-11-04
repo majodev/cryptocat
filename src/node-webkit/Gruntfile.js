@@ -16,7 +16,7 @@ var DIRS = {
 	LOCAL: './',
 	ROOT: '../../',
 	CORE: '../core/',
-	NWASSETS: './nwassets/',
+	NWASSETS: './assets/',
 	CACHE: '../../tmp/node-webkit-cache/',
 	BUILD: '../../tmp/node-webkit-build/',
 	RELEASE: '../../release/'
@@ -42,17 +42,17 @@ module.exports = function(grunt) {
 		},
 
 		'copy': {
-			core: { // copy core Cryptocat files to temporary build folder
+			core: { // copy core Cryptocat files to temporary build folder (add app subdirectory)
 				expand: true,
 				cwd: DIRS.CORE,
 				src: ['**/*.*', '!**/*.mp3'],
-				dest: DIRS.BUILD
+				dest: DIRS.BUILD + 'app/'
 			},
 			nw: { // copy local nw files to temporary build folder
 				expand: true,
 				cwd: DIRS.LOCAL,
 				// only include the things needed (add all needed node plugins here)
-				src: ['*.*', '!Gruntfile.js', '!README.md', 'nwassets/*.*', 'node_modules/node-webkit-updater/**/*.*'],
+				src: ['*.*', '!Gruntfile.js', '!README.md', DIRS.NWASSETS + '*.*', 'node_modules/node-webkit-updater/**/*.*'],
 				dest: DIRS.BUILD
 			}
 		},
@@ -84,8 +84,9 @@ module.exports = function(grunt) {
 			options: {
 				spawn: false,
 			},
-			srcChanges: {
-				files: [DIRS.CORE + '**/*.*', DIRS.LOCAL + '**/*.*'],
+			srcChanges: { // only watch local files in node-webkit
+				files: [DIRS.LOCAL + '**/*.*', '!' + DIRS.LOCAL + 'node_modules/**/*.*'],
+				//files: [DIRS.CORE + '**/*.*', DIRS.LOCAL + '**/*.*'],
 				tasks: ['buildup']
 			}
 		},
