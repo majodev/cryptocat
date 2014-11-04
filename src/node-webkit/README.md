@@ -75,11 +75,11 @@ I've only tested the update procedure with mac and windows "fake" versions, it m
 
 **Intermediate step while developing**: Now you are able to run `nw .` within `ROOT_PROJECT_FOLDER/tmp/node-webkit-build` without packaging the app for each platforms (`nw` must point to a node-webkit install in your `PATH` variable)
 
-#### `grunt build`
+#### `grunt release`
 1. `readJSON`: read the updated local `package.json` file
 2. `nodewebkit`: package all files in `ROOT_PROJECT_FOLDER/tmp/node-webkit-build` with node-webkit for each platform (cached node-webkit runtime in `ROOT_PROJECT_FOLDER/tmp/node-webkit-cache`) to `ROOT_PROJECT_FOLDER/release/`
 3. `compress`: compress releases to `zip` or `tar.gz`
 4. `clean:releasesNotZipped`: remove non zipped release files 
 
 ### `grunt makeFake`
-Same as `grunt make` but appends sets version to `2.2.1-fake`
+Same as `grunt make` but sets version to `2.2.1-fake`
