@@ -22,11 +22,11 @@ var DIRS = {
 	RELEASE: '../../release/'
 }
 
+// Specify the remote url path (add TRAILING SLASH) were the updated desktop binaries will live
+var REMOTE_UPDATE_DIR = 'https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/'
+
 module.exports = function(grunt) {
 	grunt.initConfig({
-
-		// loads local pkg json within this folder
-		pkg: grunt.file.readJSON('package.json'),
 
 		'update_json': {
 			options: {
@@ -37,7 +37,37 @@ module.exports = function(grunt) {
 				dest: DIRS.LOCAL + 'package.json',
 				// update local package.json used by node-webkit with data from root package.json
 				// specify which fields to update here:
-				fields: ['version', 'description', 'keywords', 'author', 'license']
+				// the package url to the remote packages gets automatically set!
+				fields: ['version', 'description', 'keywords', 'author', 'license', {
+					packages: function() {
+						var rootPkg = require(DIRS.ROOT + 'package.json')
+
+						return {
+							'mac': {
+								'url': REMOTE_UPDATE_DIR + 'Cryptocat_mac_v' + rootPkg.version + '.zip'
+							},
+							'win': {
+								'url': REMOTE_UPDATE_DIR + 'Cryptocat_win_v' + rootPkg.version + '.zip'
+							},
+							'linux32': {
+								'url': REMOTE_UPDATE_DIR + 'Cryptocat_linux32_v' + rootPkg.version + '.zip'
+							},
+							'linux64': {
+								'url': REMOTE_UPDATE_DIR + 'Cryptocat_linux64_v' + rootPkg.version + '.zip'
+							}
+						}
+					}
+				}]
+			},
+			fake: {
+				src: DIRS.ROOT + 'package.json',
+				dest: DIRS.LOCAL + 'package.json',
+				fields: [{
+					version: function() {
+						// reset version to 2.2.1-fake to create a FAKE older version!
+						return '2.2.1-fake';
+					}
+				}]
 			}
 		},
 
@@ -87,7 +117,7 @@ module.exports = function(grunt) {
 			srcChanges: { // only watch local files in node-webkit
 				files: [DIRS.LOCAL + '**/*.*', '!' + DIRS.LOCAL + 'node_modules/**/*.*'],
 				//files: [DIRS.CORE + '**/*.*', DIRS.LOCAL + '**/*.*'],
-				tasks: ['buildup']
+				tasks: ['build']
 			}
 		},
 
@@ -98,7 +128,7 @@ module.exports = function(grunt) {
 			},
 			mac: {
 				options: {
-					archive: DIRS.RELEASE + 'Cryptocat_mac.zip',
+					archive: DIRS.RELEASE + 'Cryptocat_mac_v<%=grunt.option("pkg").version%>.zip',
 					mode: 'zip'
 				},
 				files: [{
@@ -109,7 +139,7 @@ module.exports = function(grunt) {
 			},
 			win: {
 				options: {
-					archive: DIRS.RELEASE + 'Cryptocat_win.zip',
+					archive: DIRS.RELEASE + 'Cryptocat_win_v<%=grunt.option("pkg").version%>.zip',
 					mode: 'zip'
 				},
 				files: [{
@@ -120,7 +150,7 @@ module.exports = function(grunt) {
 			},
 			linux32: {
 				options: {
-					archive: DIRS.RELEASE + 'Cryptocat_linux32.tar.gz',
+					archive: DIRS.RELEASE + 'Cryptocat_linux32_v<%=grunt.option("pkg").version%>.tar.gz',
 					mode: 'tgz'
 				},
 				files: [{
@@ -131,7 +161,7 @@ module.exports = function(grunt) {
 			},
 			linux64: {
 				options: {
-					archive: DIRS.RELEASE + 'Cryptocat_linux64.tar.gz',
+					archive: DIRS.RELEASE + 'Cryptocat_linux64_v<%=grunt.option("pkg").version%>.tar.gz',
 					mode: 'tgz'
 				},
 				files: [{
@@ -153,11 +183,30 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-compress')
 
 	// This default task performs all needed steps to release apps with nodewebkit
-	grunt.registerTask('default', ['clean:build', 'clean:releases', 'buildup', 'nodewebkit', 'compress', 'clean:releasesNotZipped'])
+	grunt.registerTask('default', ['make'])
 
-	// tasks that need to be performed before the nodewebkit task 
+	// pipelines
+	grunt.registerTask('make', ['clean:build', 'clean:releases', 'build', 'release'])
+	grunt.registerTask('makeFake', ['clean:build', 'clean:releases', 'buildFake', 'release'])
+
+	// build task that need to be performed before the nodewebkit task 
 	// useful to execute only if you are within the DIR.BUILD directory and 
 	// using 'nw .' to run a app directly
 	// best used with the grunt watch task!
-	grunt.registerTask('buildup', ['update_json:nw', 'copy'])
+	grunt.registerTask('build', ['update_json:nw', 'copy'])
+
+	// same as above BUT change version to 2.2.1 to output a fake release
+	grunt.registerTask('buildFake', ['update_json:fake', 'copy'])
+
+	// release full node-webkit version for all defined platforms (requires build before)
+	grunt.registerTask('release', ['readJSON', 'nodewebkit', 'compress', 'clean:releasesNotZipped'])
+
+	// task that reads & saves the proper updated version of the local package.json 
+	// even after it was updated from root and sets via grunt.options to use fields
+	// within follow up tasks
+	grunt.registerTask('readJSON', 'Reading updated JSON...', function() {
+		var pkg = require('./package.json')
+
+		grunt.option('pkg', pkg)
+	});
 }

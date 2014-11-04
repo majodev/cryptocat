@@ -31,10 +31,10 @@ Early prototype working (errors might freeze app).
 
 ## Let me **test** this with some prebuild binaries!
 OK, here's are some "fake v2.2.1"-Cryptocat binaries to test the update procedure:
-- [win](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_win_FAKE_v2.2.1.zip)
-- [mac](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_mac_FAKE_v2.2.1.zip)
-- [linux32](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux32_FAKE_v2.2.1.tar.gz)
-- [linux64](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux64_FAKE_v2.2.1.tar.gz)
+- [win](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_win_v2.2.1-fake.zip)
+- [mac](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_mac_v2.2.1-fake.zip)
+- [linux32](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux32_v2.2.1-fake.tar.gz)
+- [linux64](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux64_v2.2.1-fake.tar.gz)
 
 ### What have you done with these fake binaries?
 The `package.json` file in these binaries has been modified to the version `2.2.1`. When you start one of them, the update procedure in [`update.js`](update.js) checks the [`package.json`](package.json) that is hosted on GitHub within this folder. It will determine that your version of Cryptocat is outdated (`2.2.2` is newer), download a newer version (after hitting OK within the confirm-dialog), overwrite your old version and launch the new version.
@@ -50,6 +50,10 @@ I've only tested the update procedure with mac and windows "fake" versions, it m
 - To build the windows version on mac/linux use'll need to install [wine](https://www.winehq.org/) (must be available in your `PATH`) to inject the proper `.ico` into the `.exe`! See [this issue](https://github.com/mllrsohn/node-webkit-builder/issues/19).
 - grunt task creates a `tmp` folder (@project's root dir) to cache node-webkit's runtime and nw app builds
 - grunt task creates `release` folder (@project's root dir) holds the platform release versions, zipped and ready to be hosted
+- **Make deploys easy**
+    - Use some grunt magic here (see `[Gruntfile.js](Gruntfile.js)``)!
+    - The remote path were the most up-to-date versions of Cryptocat will live, is automatically updated in the `package.json` (`REMOTE_UPDATE_DIR` in the `Gruntfile.js`)
+    - Version prefixes will be automatically added to the zipped release file for each platform e.g. `Cryptocat_linux32_v2.2.2.tar.gz`
 
 ## Bugs
 - *fatal error*: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` can freeze app (to reproduce: 1. join any room, 2. send some messages, 3. leave, 4. error)
@@ -59,3 +63,23 @@ I've only tested the update procedure with mac and windows "fake" versions, it m
 
 ## How to build:
 - Run `make node-webkit` (while your cwd is the project's root folder)
+
+## Grunt
+### `grunt make`
+- Uses the minor grunt tasks 1. `grunt build` and 2. `grunt release` (and some folder cleaning before)
+
+#### `grunt build`
+1. `update_json`: Update the local `package.json` in this folder with values from the root `package.json`
+  - ALSO updates the `packages>url`-fields for (needed in a update manifest) of each platform to e.g. `"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_mac_v2.2.2.zip"`. Remote folder prefix (in which folder are the release files hosted) must be set via `REMOTE_UPDATE_DIR` constant in the gruntfile 
+2. `copy`: Copy core and platform files to `ROOT_PROJECT_FOLDER/tmp/node-webkit-build`
+
+**Intermediate step while developing**: Now you are able to run `nw .` within `ROOT_PROJECT_FOLDER/tmp/node-webkit-build` without packaging the app for each platforms (`nw` must point to a node-webkit install in your `PATH` variable)
+
+#### `grunt build`
+1. `readJSON`: read the updated local `package.json` file
+2. `nodewebkit`: package all files in `ROOT_PROJECT_FOLDER/tmp/node-webkit-build` with node-webkit for each platform (cached node-webkit runtime in `ROOT_PROJECT_FOLDER/tmp/node-webkit-cache`) to `ROOT_PROJECT_FOLDER/release/`
+3. `compress`: compress releases to `zip` or `tar.gz`
+4. `clean:releasesNotZipped`: remove non zipped release files 
+
+### `grunt makeFake`
+Same as `grunt make` but appends sets version to `2.2.1-fake`

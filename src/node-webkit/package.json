@@ -1,6 +1,6 @@
 {
 	"name": "Cryptocat",
-	"version": "2.2.2",
+	"version": "2.2.1-fake",
 	"description": "Web Instant Messaging App With Accessible Encryption",
 	"keywords": [
 		"encryption",
@@ -26,16 +26,16 @@
 	"manifestUrl": "https://raw.githubusercontent.com/majodev/cryptocat/master/src/node-webkit/package.json",
 	"packages": {
 		"mac": {
-			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_mac.zip"
+			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_mac_v2.2.2.zip"
 		},
 		"win": {
-			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_win.zip"
+			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_win_v2.2.2.zip"
 		},
 		"linux32": {
-			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux32.tar.gz"
+			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux32_v2.2.2.zip"
 		},
 		"linux64": {
-			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux64.tar.gz"
+			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux64_v2.2.2.zip"
 		}
 	},
 	"dependencies": {
