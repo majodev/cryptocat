@@ -51,9 +51,9 @@ I've only tested the update procedure with mac and windows "fake" versions, it m
 - grunt task creates a `tmp` folder (@project's root dir) to cache node-webkit's runtime and nw app builds
 - grunt task creates `release` folder (@project's root dir) holds the platform release versions, zipped and ready to be hosted
 - **Make deploys easy**
-    - Use some grunt magic here (see `[Gruntfile.js](Gruntfile.js)``)!
-    - The remote path were the most up-to-date versions of Cryptocat will live, is automatically updated in the `package.json` (`REMOTE_UPDATE_DIR` in the `Gruntfile.js`)
-    - Version prefixes will be automatically added to the zipped release file for each platform e.g. `Cryptocat_linux32_v2.2.2.tar.gz`
+    - Use some grunt magic (see [Gruntfile.js](Gruntfile.js))!
+    - Constant remote path where the most up-to-date versions of Cryptocat will live, the urls to the newer versions in the remote `package.json` need to be automatically updated in the local `package.json` (se `REMOTE_UPDATE_DIR` in the [Gruntfile.js](Gruntfile.js))
+    - Version prefixes will be automatically added to the zipped release file for each platform e.g. `Cryptocat_linux32_v2.2.2.tar.gz` (quite limited yet, I feel the Crytocat team definitely wants to use GitHub releases (I still need to add version folder prefixes))
 
 ## Bugs
 - *fatal error*: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` can freeze app (to reproduce: 1. join any room, 2. send some messages, 3. leave, 4. error)
