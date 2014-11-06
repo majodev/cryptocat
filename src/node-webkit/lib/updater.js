@@ -82,7 +82,7 @@ Updater.prototype.checkUpdateAvailable = function() {
 	nodeWebkitUpdater.checkNewVersion(function(error, newVersionExists, manifest) {
 		if (error) {
 			// e.g. error connecting to the remote .json file
-			self.emit('error', 'Error during checkUpdateAvailable (checkNewVersion), error: ' + error.stack)
+			self.emit('error', 'Error during checkUpdateAvailable (nodeWebkitUpdater.checkNewVersion), error: ' + error.stack)
 			running = false
 			return false
 		}
@@ -121,7 +121,7 @@ Updater.prototype.downloadUpdate = function() {
 	var fileData = nodeWebkitUpdater.download(function(error, filename) {
 		if (error) {
 			// e.g. connection error
-			self.emit('error', 'Error during checkUpdateAvailable (download), error: ' + error.stack)
+			self.emit('error', 'Error during downloadUpdate (nodeWebkitUpdater.download), error: ' + error.stack)
 			running = false
 			return false
 		}
@@ -166,7 +166,7 @@ Updater.prototype.installUpdate = function() {
 
 		if (error) {
 			// error during unpacking the file
-			self.emit('error', 'Error during checkUpdateAvailable (unpack), error: ' + error.stack)
+			self.emit('error', 'Error during installUpdate (nodeWebkitUpdater.unpack), error: ' + error.stack)
 			running = false
 			return false
 		}
@@ -205,7 +205,7 @@ Updater.prototype.finishUpdate = function() {
 
 	nodeWebkitUpdater.install(copyPath, function(error) {
 		if (error) {
-			self.emit('error', 'Error during finishUpdate (install), error: ' + error.stack)
+			self.emit('error', 'Error during finishUpdate (nodeWebkitUpdater.install), error: ' + error.stack)
 		} else {
 			// Old version was successfully replaced, application can now be safely restarted.
 			// emit and pass callback reference to observer (who has gui object) to execute restart

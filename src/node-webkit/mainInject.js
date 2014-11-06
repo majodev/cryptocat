@@ -13,56 +13,24 @@
 	var pkg = require('./package.json')
 	var updater = require('./lib/updater')
 
+	// constants
+	var STATUS_CSS_STYLE = '<style type="text/css">' +
+		' .updateStatusClickable { color: rgba(255, 40, 40, 0.95) !important; font-weight:bold; cursor: pointer}' +
+		' .updateStatusClickable:hover { text-decoration: underline; }' +
+		'</style>'
+
 	// private vars
 	var coreWindow = gui.Window.get()
 	var oldStatusText
 	var $status;
 
-
-	// private function to show confirmation and start DOWNLOAD
-	// if declined, binding to status with click to download later.
-	function askConfirmToDownload() {
-		var confirmerValue = window.confirm('Do you want to download it now?',
-			'Cryptocat ' + updater.getSavedRemoteVersion() + ' is available')
-
-		if (confirmerValue === true) {
-			unBindReask()
-			updater.downloadUpdate() // triggers file download!
+	function makeStatusClickable(enable) {
+		if (enable) {
+			$status.addClass('updateStatusClickable')
 		} else {
-			bindReask(askConfirmToDownload, 'Click here to download Cryptocat '
-				+ updater.getSavedRemoteVersion() + '!')
+			$status.removeClass('updateStatusClickable')
+			$status.off()
 		}
-	}
-
-	// private function to show confirmation and start INSTALLATION
-	// if declined, binding to status with click to install later.
-	function askConfirmToInstall() {
-		var confirmerValue = window.confirm('Do you want to install it now?',
-			'Cryptocat ' + updater.getSavedRemoteVersion() + ' has been downloaded')
-
-		if (confirmerValue === true) {
-			unBindReask()
-			updater.installUpdate() // triggers install!
-		} else {
-			bindReask(askConfirmToInstall, 'Click here to install Cryptocat '
-				+ updater.getSavedRemoteVersion() + '!')
-		}
-	}
-
-	// binds $status to click and reask confirmation dialog
-	function bindReask(targetFunc, statusText) {
-		$status.text(statusText)
-		$status.on('click', function() {
-			$status.off() // dismiss eventhandler of versionField.
-			$status.css('cursor', 'pointer');
-			targetFunc() // reask
-		})
-	}
-
-	// unbinds $status
-	function unBindReask() {
-		$status.off()
-		$status.css('cursor', 'inherit');
 	}
 
 	// ---------------------------------------------------------------------------
@@ -91,20 +59,34 @@
 
 	updater.on('updateAvailable', function(options) {
 		console.log('updateAvailable')
-		$status.text('Cryptocat ' + options.remoteVersion + ' is available!')
 
-		askConfirmToDownload()
+		// ask before downloading!
+		$status.text('Cryptocat ' + options.remoteVersion + ' is available. Click to download!')
+		makeStatusClickable(true);
+		$status.click(function() {
+			makeStatusClickable(false);
+			updater.downloadUpdate()
+			$status.text('Downloading Cryptocat ' + options.remoteVersion + ' (' + 0 + '%' + ')')
+		})
+
 	})
 
 	updater.on('downloadedUpdate', function(options) {
 		console.log('downloadedUpdate')
-		$status.text('Cryptocat ' + options.remoteVersion + ' was downloaded!')
 
-		askConfirmToInstall()
+		// ask before installing!
+		$status.text('Cryptocat ' + options.remoteVersion + ' was downloaded. Click to install!')
+		makeStatusClickable(true);
+		$status.click(function() {
+			makeStatusClickable(false);
+			updater.installUpdate()
+			$status.off()
+		})
+
 	})
 
 	updater.on('downloadProgress', function(options) {
-		console.log('downloadProgress')
+		// console.log('downloadProgress')
 		$status.text('Downloading Cryptocat ' + options.remoteVersion + ' (' + options.percentage + '%' + ')')
 	})
 
@@ -151,11 +133,13 @@
 		} else {
 			// app is hidden during startup, show it the first time...
 			coreWindow.show()
+			// add the status css style
+			$(STATUS_CSS_STYLE).appendTo('head')
 		}
 
 		// useful while developing: show dev tools...
-		// coreWindow.showDevTools()
-		// coreWindow.focus()
+		coreWindow.showDevTools()
+		coreWindow.focus()
 
 		// init updater and start auto-update process!
 		updater.init(gui.App.argv)
