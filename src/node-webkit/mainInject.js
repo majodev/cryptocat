@@ -15,6 +15,26 @@
 	var coreWindow = gui.Window.get()
 	var $versionField;
 
+
+	// private function to show confirmation and start download
+	// if declined, binding to versionField with click to install later.
+	function askConfirmToDownload() {
+		var confirmerValue = window.confirm('Cryptocat ' + updater.getSavedRemoteVersion() +
+			' is available.\nDo you want to download and automatically install it now?')
+
+		if (confirmerValue === true) {
+			updater.downloadUpdate() // triggers file download!
+		} else {
+			$versionField.text('Click here to download Cryptocat ' + updater.getSavedRemoteVersion() + '!')
+			$versionField.on('click', function () {
+				$versionField.off() // dismiss eventhandler of versionField.
+				askConfirmToDownload() // reask
+			})
+		}
+
+	}
+
+
 	// ---------------------------------------------------------------------------
 	// All events to listen on from lib/updater.js
 	// Here we bind the events to the cryptocat UI!
@@ -31,12 +51,19 @@
 
 	updater.on('noUpdateAvailable', function(options) {
 		console.log('noUpdateAvailable')
-		$versionField.text('Cryptocat ' + options.remoteVersion + ' is the latest version')
+		$versionField.text('Your Cryptocat ' + options.remoteVersion + ' is the latest version')
+
+		setTimeout(function() {
+			// restore old text in version field after a while.
+			$versionField.text(pkg.version)
+		}, 1500)
 	})
 
 	updater.on('updateAvailable', function(options) {
 		console.log('updateAvailable')
 		$versionField.text('Cryptocat ' + options.remoteVersion + ' is available!')
+
+		askConfirmToDownload()
 	})
 
 	updater.on('downloadedUpdate', function(options) {
@@ -53,20 +80,23 @@
 		$versionField.text('Cryptocat ' + options.remoteVersion + ' is installing...')
 	})
 
-	updater.on('preInstallationFinished', function() {
-		$versionField.text('Exiting...')
-		console.log('preInstallationFinished')
-		gui.App.quit()
-	})
-
 	updater.on('installingUpdate', function() {
 		$versionField.text('Cryptocat is installing...')
 		console.log('installingUpdate')
 	})
 
+	updater.on('preInstallationFinished', function() {
+		$versionField.text('Update finished, restarting...')
+		console.log('preInstallationFinished')
+
+		gui.App.quit() // exit the app (a newer instance restarts from tmp)
+	})
+
 	updater.on('updateFinished', function(options) {
-		window.alert('Your application was updated successfuly and now needs to be restarted.')
-		options.execute(gui)
+		window.alert('Cryptocat has been successfuly updated to version ' +
+			pkg.version + '.\nClick OK to restart.')
+		
+		options.execute(gui) // open new app and exit old from tmp!
 	})
 
 	// ---------------------------------------------------------------------------
@@ -85,8 +115,8 @@
 		coreWindow.show()
 
 		// dev: show dev tools
-		coreWindow.showDevTools()
-		coreWindow.focus()
+		// coreWindow.showDevTools()
+		// coreWindow.focus()
 
 		// init updater and start auto-update process!
 		updater.init(gui.App.argv)

@@ -6,17 +6,14 @@
 var EventEmitter = require('events').EventEmitter
 var util = require('util')
 var NodeWebkitUpdater = require('node-webkit-updater')
-var pkg = require('../package.json') // Insert your app's manifest here
+var pkg = require('../package.json')
 
 // private vars
-var nodeWebkitUpdater = new NodeWebkitUpdater(pkg)
+var nodeWebkitUpdater = new NodeWebkitUpdater(pkg) // instance of node-webkit-updater
 var copyPath, execPath
-
-// flag that shows if updater has already been initialized once
-var initialized = false
-
-// flag that shows if updater is currently doing something.
-var running = false
+var initialized = false // flag if updater has already been initialized once
+var running = false // flag if updater is currently doing something.
+var remoteManifest = false // manifest gets stored here privately if update was found
 
 // -----------------------------------------------------------------------------
 // Constructor of Updater
@@ -24,7 +21,6 @@ var running = false
 
 var Updater = function() {
 	this.args = []
-	this.updateAvailable = false
 }
 
 util.inherits(Updater, EventEmitter)
@@ -100,65 +96,79 @@ Updater.prototype.checkUpdateAvailable = function() {
 		}
 
 		// if we are still here, then there is a newer version available!
+		// save the manifest
+		remoteManifest = manifest
+
 		self.emit('updateAvailable', {
 			remoteVersion: manifest.version
 		})
 
-		var sizeLoaded = 0;
-		var fileData = nodeWebkitUpdater.download(function(error, filename) {
+		running = false
+	})
+}
+
+Updater.prototype.downloadUpdate = function() {
+	var self = this
+
+	// immediately exit if we are already running
+	if (running || remoteManifest === false) {
+		return false
+	}
+	running = true
+
+	var sizeLoaded = 0;
+	var fileData = nodeWebkitUpdater.download(function(error, filename) {
+		if (error) {
+			// e.g. connection error
+			self.emit('error', 'Error during checkUpdateAvailable (download), error: ' + error.stack)
+			running = false
+			return false
+		}
+
+		// file was properly downloaded
+		self.emit('downloadedUpdate', {
+			remoteVersion: remoteManifest.version,
+			filename: filename
+		})
+
+		// let's unpack it...
+		nodeWebkitUpdater.unpack(filename, function(error, newAppPath) {
+
 			if (error) {
-				// e.g. connection error
-				self.emit('error', 'Error during checkUpdateAvailable (download), error: ' + error.stack)
+				// error during unpacking the file
+				self.emit('error', 'Error during checkUpdateAvailable (unpack), error: ' + error.stack)
 				running = false
 				return false
 			}
 
-			// file was properly downloaded
-			self.emit('downloadedUpdate', {
-				remoteVersion: manifest.version,
+			self.emit('unpackingFinished', {
+				remoteVersion: remoteManifest.version,
 				filename: filename
 			})
 
-			// let's unpack it...
-			nodeWebkitUpdater.unpack(filename, function(error, newAppPath) {
+			// running the installer
+			nodeWebkitUpdater.runInstaller(newAppPath, [nodeWebkitUpdater.getAppPath(), nodeWebkitUpdater.getAppExec()], {})
+			self.emit('preInstallationFinished')
 
-				if (error) {
-					// error during unpacking the file
-					self.emit('error', 'Error during checkUpdateAvailable (unpack), error: ' + error.stack)
-					running = false
-					return false
-				}
-
-				self.emit('unpackingFinished', {
-					remoteVersion: manifest.version,
-					filename: filename
-				})
-
-				// running the installer
-				nodeWebkitUpdater.runInstaller(newAppPath, [nodeWebkitUpdater.getAppPath(), nodeWebkitUpdater.getAppExec()], {})
-				self.emit('preInstallationFinished')
-				
-				// done, this application can now be closed.
-				running = false
+			// done, this application can now be closed.
+			running = false
 
 
-			}, manifest)
+		}, remoteManifest)
 
 
-		}, manifest)
+	}, remoteManifest)
 
-		// hock to the fileData (the progressing download to emit events on status)
-		fileData.on('data', function(chunk) {
-			sizeLoaded += chunk.length;
+	// hock to the fileData (the progressing download to emit events on status)
+	fileData.on('data', function(chunk) {
+		sizeLoaded += chunk.length;
 
-			self.emit('downloadProgress', {
-				loaded: sizeLoaded,
-				size: fileData['content-length'],
-				percentage: Math.floor(sizeLoaded / fileData['content-length'] * 100),
-				remoteVersion: manifest.version
-			})
+		self.emit('downloadProgress', {
+			loaded: sizeLoaded,
+			size: fileData['content-length'],
+			percentage: Math.floor(sizeLoaded / fileData['content-length'] * 100),
+			remoteVersion: remoteManifest.version
 		})
-
 	})
 }
 
@@ -191,6 +201,14 @@ Updater.prototype.finishUpdate = function() {
 		}
 		running = false
 	})
+}
+
+Updater.prototype.getSavedRemoteVersion = function() {
+	if (remoteManifest !== false) {
+		return remoteManifest.version
+	}
+	console.error('Tried to get saved remote version without having updated version available!')
+	return false
 }
 
 // -----------------------------------------------------------------------------

@@ -10,7 +10,7 @@ Early prototype working (errors might freeze app).
 1. ~~Perform platform builds into `/release` via automated grunt task~~ *done*.
 2. ~~Desktop apps can check if they are running the most up-to-date version of Cryptocat~~ *done*.
 3. ~~Desktop apps fetch a github-hosted `package.json` file in a [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater)s' compatible manifest format, download the newer version and execute a self-update procedure~~ *done*.
-	- Problems with finally restarting after updating in Windows (untested [fix](https://github.com/edjafarov/node-webkit-updater/issues/48) might be the solution to this)
+	- ~~Problems with finally restarting after updating in Windows (untested [fix](https://github.com/edjafarov/node-webkit-updater/issues/48) might be the solution to this)~~ *works*.
 4. Update app on all platforms **securely**
 	- Manifest (`package.json`) must be hosted on a SSL enabled server.
 	- Force downloading new versions only from trusted SLL connections.
@@ -32,10 +32,10 @@ Early prototype working (errors might freeze app).
 
 ## Let me **test** this with some prebuild binaries!
 OK, here's are some "v2.2.1-fake"-Cryptocat binaries to test the update procedure:
-- [win](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_win_v2.2.1-fake.zip) (new, with an untested [fix](https://github.com/edjafarov/node-webkit-updater/issues/48))
+- [win](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_win_v2.2.1-fake.zip) (works)
 - [mac](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_mac_v2.2.1-fake.zip) (works)
-- [linux32](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux32_v2.2.1-fake.tar.gz) (untested.)
-- [linux64](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux64_v2.2.1-fake.tar.gz) (untested.)
+- [linux32](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux32_v2.2.1-fake.tar.gz) (untested)
+- [linux64](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux64_v2.2.1-fake.tar.gz) (untested)
 
 ### What have you done with these fake binaries?
 The `package.json` file in these binaries has been modified to the version `2.2.1-fake`. When you start one of them, the update procedure in [`update.js`](update.js) checks the [`package.json`](package.json) that is hosted on GitHub within this folder. It will determine that your version of Cryptocat is outdated (`2.2.2` is newer), download a newer version (after hitting OK within the confirm-dialog), overwrite your old version and launch the new version.
