@@ -14,6 +14,7 @@ var copyPath, execPath
 var initialized = false // flag if updater has already been initialized once
 var running = false // flag if updater is currently doing something.
 var remoteManifest = false // manifest gets stored here privately if update was found
+var downloadedFilename = false // filename gets stored here privately if updated was downloaded
 
 // -----------------------------------------------------------------------------
 // Constructor of Updater
@@ -96,7 +97,7 @@ Updater.prototype.checkUpdateAvailable = function() {
 		}
 
 		// if we are still here, then there is a newer version available!
-		// save the manifest
+		// save the manifest (prerequisite for download to run)
 		remoteManifest = manifest
 
 		self.emit('updateAvailable', {
@@ -110,7 +111,7 @@ Updater.prototype.checkUpdateAvailable = function() {
 Updater.prototype.downloadUpdate = function() {
 	var self = this
 
-	// immediately exit if we are already running
+	// immediately exit if we are already running (or privates manifest are not set!)
 	if (running || remoteManifest === false) {
 		return false
 	}
@@ -125,37 +126,16 @@ Updater.prototype.downloadUpdate = function() {
 			return false
 		}
 
-		// file was properly downloaded
+		// if we are still here, then the file was properly downloaded
+		// save the filename (prerequisite for unpacking and install to run)
+		downloadedFilename = filename
+		
 		self.emit('downloadedUpdate', {
 			remoteVersion: remoteManifest.version,
 			filename: filename
 		})
 
-		// let's unpack it...
-		nodeWebkitUpdater.unpack(filename, function(error, newAppPath) {
-
-			if (error) {
-				// error during unpacking the file
-				self.emit('error', 'Error during checkUpdateAvailable (unpack), error: ' + error.stack)
-				running = false
-				return false
-			}
-
-			self.emit('unpackingFinished', {
-				remoteVersion: remoteManifest.version,
-				filename: filename
-			})
-
-			// running the installer
-			nodeWebkitUpdater.runInstaller(newAppPath, [nodeWebkitUpdater.getAppPath(), nodeWebkitUpdater.getAppExec()], {})
-			self.emit('preInstallationFinished')
-
-			// done, this application can now be closed.
-			running = false
-
-
-		}, remoteManifest)
-
+		running = false
 
 	}, remoteManifest)
 
@@ -170,6 +150,40 @@ Updater.prototype.downloadUpdate = function() {
 			remoteVersion: remoteManifest.version
 		})
 	})
+}
+
+Updater.prototype.installUpdate = function() {
+	var self = this
+
+	// immediately exit if we are already running (or privates manifest and filename are not set!)
+	if (running || remoteManifest === false || downloadedFilename === false) {
+		return false
+	}
+	running = true
+
+	// let's unpack it...
+	nodeWebkitUpdater.unpack(downloadedFilename, function(error, newAppPath) {
+
+		if (error) {
+			// error during unpacking the file
+			self.emit('error', 'Error during checkUpdateAvailable (unpack), error: ' + error.stack)
+			running = false
+			return false
+		}
+
+		self.emit('unpackingFinished', {
+			remoteVersion: remoteManifest.version,
+			filename: downloadedFilename
+		})
+
+		// running the installer
+		nodeWebkitUpdater.runInstaller(newAppPath, [nodeWebkitUpdater.getAppPath(), nodeWebkitUpdater.getAppExec()], {})
+		self.emit('preInstallationFinished')
+
+		// done, this application can now be closed.
+		running = false
+
+	}, remoteManifest)
 }
 
 Updater.prototype.finishUpdate = function() {
