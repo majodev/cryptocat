@@ -56,8 +56,19 @@
 
 			// ------------- Step 6 -------------
 			setUIStatus('Successfully replaced old version!')
-			upd.run(execPath, null)
-			gui.App.quit()
+
+			if (process.platform === 'win32') {
+				// fix restart on windows (https://github.com/cryptocat/cryptocat/issues/566#issuecomment-61947221)
+				gui.Shell.openItem(execPath)
+			} else {
+				upd.run(execPath, null)
+			}
+
+			gui.Window.get().hide()
+
+			setTimeout(function() {
+				gui.App.quit()
+			}, 1000) // wait 1 sec until closing tmp completely
 
 		})
 	} else { // if no arguments were passed to the app

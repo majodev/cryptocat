@@ -10,6 +10,7 @@ Early prototype working (errors might freeze app).
 1. ~~Perform platform builds into `/release` via automated grunt task~~ *done*.
 2. ~~Desktop apps can check if they are running the most up-to-date version of Cryptocat~~ *done*.
 3. ~~Desktop apps fetch a github-hosted `package.json` file in a [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater)s' compatible manifest format, download the newer version and execute a self-update procedure~~ *done*.
+  - Problems with finally restarting after updating in Windows (untested [fix](https://github.com/edjafarov/node-webkit-updater/issues/48) might be the solution to this)
 4. Update app on all platforms **securely**
   - Manifest (`package.json`) must be hosted on a SSL enabled server.
   - Force downloading new versions only from trusted SLL connections.
@@ -57,7 +58,7 @@ I've only tested the update procedure with mac and windows "fake" versions, it m
 
 ## Bugs
 - *fatal error*: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` can freeze app (to reproduce: 1. join any room, 2. send some messages, 3. leave, 4. error)
-- Copy/Paste does not work!
+- Copy/Paste does not work ([possible fix](https://github.com/rogerwang/node-webkit/issues/1955))!
 - ~~*bug*: No sounds are currently played, mp3 support needs a library shipped with node-webkit, `.ogg` should be preferred~~ fixed by always using `.ogg` when running Cryptocat in node-webkit ([see cryptocat.js line 29](https://github.com/majodev/cryptocat/blob/master/src/core/js/cryptocat.js#L29))
 - Windows app needs to be relaunched after update completed
 - Update procedure might download a `.zip` that cannot be unzipped
