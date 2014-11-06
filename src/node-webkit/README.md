@@ -42,19 +42,20 @@ The `package.json` file in these binaries has been modified to the version `2.2.
 
 ### It doesn't work!
 Well, it's an early prototype....  
-I've only tested the update procedure with mac and windows "fake" versions, it may no work in your environment...
+I've only tested the update procedure with mac and windows "fake" versions. Also, this may never work in your very environment...
 
 ## Thoughts
 - I don't want to modify any files outside of this `node-webkit`-folder, this should be a target specific contribution!
 - The local `package.json` within this folder must get automatically updated (with values from the root `package.json`) via the local grunt task, in order to make releases as easy as possible
+  - Is it a better idea to provide a separate `update-manifest.json` file and don't use update-logic with the local `package.json` (+ don't update it automatically based on the root `package.json` file)?
 - The build task can be triggered from project's root via `make node-webkit`.
 - To build the windows version on mac/linux use'll need to install [wine](https://www.winehq.org/) (must be available in your `PATH`) to inject the proper `.ico` into the `.exe`! See [this issue](https://github.com/mllrsohn/node-webkit-builder/issues/19).
 - grunt task creates a `tmp` folder (@project's root dir) to cache node-webkit's runtime and nw app builds
 - grunt task creates `release` folder (@project's root dir) holds the platform release versions, zipped and ready to be hosted
 - **Make deploys easy**
-    - Use some grunt magic (see [Gruntfile.js](Gruntfile.js))!
-    - Constant remote path where the most up-to-date versions of Cryptocat will live, the urls to the newer versions in the remote `package.json` need to be automatically updated in the local `package.json` (se `REMOTE_UPDATE_DIR` in the [Gruntfile.js](Gruntfile.js))
-    - Version prefixes will be automatically added to the zipped release file for each platform e.g. `Cryptocat_linux32_v2.2.2.tar.gz` (quite limited yet, I feel the Crytocat team definitely wants to use GitHub releases (I still need to add version folder prefixes))
+  - Use some grunt magic (see [Gruntfile.js](Gruntfile.js))!
+  - Constant remote path where the most up-to-date versions of Cryptocat will live, the urls to the newer versions in the remote `package.json` need to be automatically updated in the local `package.json` (se `REMOTE_UPDATE_DIR` in the [Gruntfile.js](Gruntfile.js))
+  - Version prefixes will be automatically added to the zipped release file for each platform e.g. `Cryptocat_linux32_v2.2.2.tar.gz` (quite limited yet, I feel the Crytocat team definitely wants to use GitHub releases (I still need to add version folder prefixes))
 
 ## Bugs
 - *fatal error*: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` can freeze app (to reproduce: 1. join any room, 2. send some messages, 3. leave, 4. error)

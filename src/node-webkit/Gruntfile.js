@@ -32,7 +32,7 @@ module.exports = function(grunt) {
 			options: {
 				indent: '\t' // always indent with tabs
 			},
-			nw: {
+			'nw': {
 				src: DIRS.ROOT + 'package.json',
 				dest: DIRS.LOCAL + 'package.json',
 				// update local package.json used by node-webkit with data from root package.json
@@ -59,7 +59,7 @@ module.exports = function(grunt) {
 					}
 				}]
 			},
-			fake: {
+			'fake': {
 				src: DIRS.ROOT + 'package.json',
 				dest: DIRS.LOCAL + 'package.json',
 				fields: [{
@@ -72,13 +72,13 @@ module.exports = function(grunt) {
 		},
 
 		'copy': {
-			core: { // copy core Cryptocat files to temporary build folder (add app subdirectory)
+			'core': { // copy core Cryptocat files to temporary build folder (add app subdirectory)
 				expand: true,
 				cwd: DIRS.CORE,
 				src: ['**/*.*', '!**/*.mp3'],
 				dest: DIRS.BUILD + 'app/'
 			},
-			nw: { // copy local nw files to temporary build folder
+			'nw': { // copy local nw files to temporary build folder
 				expand: true,
 				cwd: DIRS.LOCAL,
 				// only include the things needed (add all needed node plugins here)
@@ -114,7 +114,7 @@ module.exports = function(grunt) {
 			options: {
 				spawn: false,
 			},
-			srcChanges: { // only watch local files in node-webkit
+			'srcChanges': { // only watch local files in node-webkit
 				files: [DIRS.LOCAL + '**/*.*', '!' + DIRS.LOCAL + 'node_modules/**/*.*'],
 				//files: [DIRS.CORE + '**/*.*', DIRS.LOCAL + '**/*.*'],
 				tasks: ['build']
@@ -122,11 +122,11 @@ module.exports = function(grunt) {
 		},
 
 		// gzip assets 1-to-1 for production
-		compress: {
+		'compress': {
 			options: {
 				dest: ''
 			},
-			mac: {
+			'mac': {
 				options: {
 					archive: DIRS.RELEASE + 'Cryptocat_mac_v<%=grunt.option("pkg").version%>.zip',
 					mode: 'zip'
@@ -137,7 +137,7 @@ module.exports = function(grunt) {
 					src: ['**']
 				}]
 			},
-			win: {
+			'win': {
 				options: {
 					archive: DIRS.RELEASE + 'Cryptocat_win_v<%=grunt.option("pkg").version%>.zip',
 					mode: 'zip'
@@ -148,7 +148,7 @@ module.exports = function(grunt) {
 					src: ['**']
 				}]
 			},
-			linux32: {
+			'linux32': {
 				options: {
 					archive: DIRS.RELEASE + 'Cryptocat_linux32_v<%=grunt.option("pkg").version%>.tar.gz',
 					mode: 'tgz'
@@ -159,7 +159,7 @@ module.exports = function(grunt) {
 					src: ['**']
 				}]
 			},
-			linux64: {
+			'linux64': {
 				options: {
 					archive: DIRS.RELEASE + 'Cryptocat_linux64_v<%=grunt.option("pkg").version%>.tar.gz',
 					mode: 'tgz'
@@ -186,8 +186,8 @@ module.exports = function(grunt) {
 	grunt.registerTask('default', ['make'])
 
 	// pipelines
-	grunt.registerTask('make', ['clean:build', 'clean:releases', 'build', 'release'])
-	grunt.registerTask('makeFake', ['clean:build', 'clean:releases', 'buildFake', 'release'])
+	grunt.registerTask('make', ['clean:build', 'build', 'release'])
+	grunt.registerTask('makeFake', ['clean:build', 'buildFake', 'release'])
 
 	// build task that need to be performed before the nodewebkit task 
 	// useful to execute only if you are within the DIR.BUILD directory and 
