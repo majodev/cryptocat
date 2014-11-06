@@ -65,7 +65,7 @@ module.exports = function(grunt) {
 				fields: [{
 					version: function() {
 						// reset version to 2.2.1-fake to create a FAKE older version!
-						return '2.2.1-fake';
+						return '2.2.1-fake'
 					}
 				}]
 			}
@@ -210,5 +210,5 @@ module.exports = function(grunt) {
 		var pkg = require('./package.json')
 
 		grunt.option('pkg', pkg)
-	});
+	})
 }

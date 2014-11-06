@@ -10,11 +10,11 @@ var pkg = require('../package.json')
 
 // private vars
 var nodeWebkitUpdater = new NodeWebkitUpdater(pkg) // instance of node-webkit-updater
-var copyPath, execPath
+var copyPath, execPath // node-webkit-updater vars 
 var initialized = false // flag if updater has already been initialized once
 var running = false // flag if updater is currently doing something.
 var remoteManifest = false // manifest gets stored here privately if update was found
-var downloadedFilename = false // filename gets stored here privately if updated was downloaded
+var downloadedFilename = false // filename gets stored here privately if update was downloaded
 
 // -----------------------------------------------------------------------------
 // Constructor of Updater
@@ -121,7 +121,7 @@ Updater.prototype.downloadUpdate = function() {
 	}
 	running = true
 
-	var sizeLoaded = 0;
+	var sizeLoaded = 0
 	var fileData = nodeWebkitUpdater.download(function(error, filename) {
 		if (error) {
 			// e.g. connection error
@@ -149,7 +149,7 @@ Updater.prototype.downloadUpdate = function() {
 
 	// hock to the fileData (the progressing download to emit events on status)
 	fileData.on('data', function(chunk) {
-		sizeLoaded += chunk.length;
+		sizeLoaded += chunk.length
 
 		self.emit('downloadProgress', {
 			loaded: sizeLoaded,

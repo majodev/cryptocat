@@ -1,4 +1,5 @@
-// This is script is injected by node-webkit after document object is loaded, before onload event is fired
+// This script is injected by node-webkit after the document object is loaded, 
+// but before onload event is fired
 // see "inject-js-end" flag in package.json
 // For more information see https://github.com/rogerwang/node-webkit/wiki/Manifest-format#inject-js-start--inject-js-end
 
@@ -22,7 +23,7 @@
 	// private vars
 	var coreWindow = gui.Window.get()
 	var oldStatusText
-	var $status;
+	var $status
 
 	function makeStatusClickable() {
 		$status.addClass('updateStatusClickable')
@@ -150,6 +151,6 @@
 
 		// init updater and start auto-update process!
 		updater.init(gui.App.argv)
-	});
+	})
 
 }())
