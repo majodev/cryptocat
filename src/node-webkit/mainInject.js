@@ -24,13 +24,13 @@
 	var oldStatusText
 	var $status;
 
-	function makeStatusClickable(enable) {
-		if (enable) {
-			$status.addClass('updateStatusClickable')
-		} else {
-			$status.removeClass('updateStatusClickable')
-			$status.off()
-		}
+	function makeStatusClickable() {
+		$status.addClass('updateStatusClickable')
+	}
+
+	function undoStatusClickable() {
+		$status.removeClass('updateStatusClickable')
+		$status.off()
 	}
 
 	// ---------------------------------------------------------------------------
@@ -38,8 +38,21 @@
 	// Here we bind the events to the cryptocat UI!
 	// ---------------------------------------------------------------------------
 
-	updater.on('error', function(e) {
-		process.mainModule.exports.writeErrorToLog(e)
+	updater.on('error', function(error) {
+		// var retryCallback = error.retryCallback
+
+		console.error('catched' + error.discription)
+		process.mainModule.exports.writeErrorToLog(error.discription + '\n' + error.stack)
+
+		$status.text(error.discription)
+
+		// ask before retrying after error encountered
+		// $status.text(error.discription + ' Click to retry!')
+		// makeStatusClickable()
+		// $status.click(function() {
+		// 	undoStatusClickable()
+		// 	retryCallback()
+		// })
 	})
 
 	updater.on('checkingForUpdate', function() {
@@ -54,7 +67,7 @@
 		setTimeout(function() {
 			// restore old text in version field after a while.
 			$status.text(oldStatusText)
-		}, 1500)
+		}, 2000)
 	})
 
 	updater.on('updateAvailable', function(options) {
@@ -62,9 +75,9 @@
 
 		// ask before downloading!
 		$status.text('Cryptocat ' + options.remoteVersion + ' is available. Click to download!')
-		makeStatusClickable(true);
+		makeStatusClickable()
 		$status.click(function() {
-			makeStatusClickable(false);
+			undoStatusClickable()
 			updater.downloadUpdate()
 			$status.text('Downloading Cryptocat ' + options.remoteVersion + ' (' + 0 + '%' + ')')
 		})
@@ -76,9 +89,9 @@
 
 		// ask before installing!
 		$status.text('Cryptocat ' + options.remoteVersion + ' was downloaded. Click to install!')
-		makeStatusClickable(true);
+		makeStatusClickable()
 		$status.click(function() {
-			makeStatusClickable(false);
+			undoStatusClickable()
 			updater.installUpdate()
 			$status.off()
 		})
@@ -123,23 +136,17 @@
 		coreWindow.title = coreWindow.title + ' ' + pkg.version
 
 		// we will write every information directly to the #version field in the crypto ui
-		oldStatusText = $('#version').text()
+		oldStatusText = $('#version').text() // remember original text
 		$status = $('#version')
 
-		if (gui.App.argv.length) {
-			// arguments to start app have been provided
-			// this is the postinstall procedure, DON'T SHOW THE APP!
-			console.log('postinstall procedure, not showing application.')
-		} else {
-			// app is hidden during startup, show it the first time...
-			coreWindow.show()
-			// add the status css style
-			$(STATUS_CSS_STYLE).appendTo('head')
-		}
+		// app is hidden during startup, show it the first time...
+		coreWindow.show()
+		// add the status css style
+		$(STATUS_CSS_STYLE).appendTo('head')
 
 		// useful while developing: show dev tools...
-		coreWindow.showDevTools()
-		coreWindow.focus()
+		// coreWindow.showDevTools()
+		// coreWindow.focus()
 
 		// init updater and start auto-update process!
 		updater.init(gui.App.argv)

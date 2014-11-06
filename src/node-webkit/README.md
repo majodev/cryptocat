@@ -12,17 +12,17 @@ Early prototype working (errors might freeze app).
 3. ~~Desktop apps fetch a github-hosted `package.json` file in a [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater)s' compatible manifest format, download the newer version and execute a self-update procedure~~ *done*.
 	- ~~Problems with finally restarting after updating in Windows (untested [fix](https://github.com/edjafarov/node-webkit-updater/issues/48) might be the solution to this)~~ *works*.
 4. Update app on all platforms **securely**
-	- Manifest (`package.json`) must be hosted on a SSL enabled server.
-	- Force downloading new versions only from trusted SLL connections.
+	- ~~Manifest (`package.json`) is hosted on a SSL enabled server.~~ as hosted currently, is it enough?
+	- ~~Force downloading new versions only from trusted SLL connections.~~ as hosted currently, is it enough?
 	- SHASUMs?
 	- MITM attacks?
+	- Fix application freezes on connection problems (e.g. when you don't allow communication with LittleSnitch, might be in the domain of [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater))
 5. Fix errors in `cryptocat.js` that may stall the node-webkit engine ([**without** globally catching uncaught exceptions](https://github.com/rogerwang/node-webkit/issues/1699))
-	- `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)`
-	- Are there more?
 	- All errors are currently globally catched and logged to `YOUR_HOMEDIR/cryptocat-node-webkit-errors.log`
+	- `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)`
 6. Essential UI improvements
 	- ~~Use `.ogg` instead of `.mp3` in node-webkit~~ ([learn why](https://github.com/rogerwang/node-webkit/wiki/Using-MP3-%26-MP4-%28H.264%29-using-the--video--%26--audio--tags.))
-	- Should auto-update really be a separate view during startup?
+	- ~~Should auto-update really be a separate view during startup?~~ Nope, it it is available directly in the version footer.
 	- Do we need a tray-icon? (it feels akward that the whole app closes, if one window gets closed)
 	- How to do desktop chat notifications?
 	- Multiple chat session windows?
@@ -41,17 +41,15 @@ OK, here's are some "v2.2.1-fake"-Cryptocat binaries to test the update procedur
 The `package.json` file in these binaries has been modified to the version `2.2.1-fake`. When you start one of them, the update procedure in [`update.js`](update.js) checks the [`package.json`](package.json) that is hosted on GitHub within this folder. It will determine that your version of Cryptocat is outdated (`2.2.2` is newer), download a newer version (after hitting OK within the confirm-dialog), overwrite your old version and launch the new version.
 
 ### It doesn't work!
-Well, it's an early prototype....  
-I've only tested the update procedure with mac and windows "fake" versions. Also, this may never work in your very environment...
+Well, it's an early prototype (**but it should work, please leave feedback!**)....  
+I've only tested the update procedure with mac and windows "fake" versions.
 
 ## Thoughts
-- I don't want to modify any files outside of this `node-webkit`-folder, this should be a target specific contribution!
+- I ~~don't want to modify~~ want to minimize modifications to any files outside of this `node-webkit`-folder, this should be a target specific contribution!
+	- Currently only modified `cryptocat.js` to force usage of `.ogg` within node-webkit
+	- It should be no problem to leave the other files alone, all js injections can be done via node-webkit's [inject-js-end](https://github.com/rogerwang/node-webkit/wiki/Manifest-format#inject-js-start--inject-js-end), see [mainInject.js](mainInject.js)
 - The local `package.json` within this folder must get automatically updated (with values from the root `package.json`) via the local grunt task, in order to make releases as easy as possible
-	- Is it a better idea to provide a separate `update-manifest.json` file and don't use update-logic with the local `package.json` (+ don't update it automatically based on the root `package.json` file)?
-- The build task can be triggered from project's root via `make node-webkit`.
-- To build the windows version on mac/linux use'll need to install [wine](https://www.winehq.org/) (must be available in your `PATH`) to inject the proper `.ico` into the `.exe`! See [this issue](https://github.com/mllrsohn/node-webkit-builder/issues/19).
-- grunt task creates a `tmp` folder (@project's root dir) to cache node-webkit's runtime and nw app builds
-- grunt task creates `release` folder (@project's root dir) holds the platform release versions, zipped and ready to be hosted
+	- ~~Is it a better idea to provide a separate `update-manifest.json` file and don't use update-logic with the local `package.json` (+ don't update it automatically based on the root `package.json` file)?~~ Nope, doubles the work.~~
 - **Make deploys easy**
 	- Use some grunt magic (see [Gruntfile.js](Gruntfile.js))!
 	- Constant remote path where the most up-to-date versions of Cryptocat will live, the urls to the newer versions in the remote `package.json` need to be automatically updated in the local `package.json` (se `REMOTE_UPDATE_DIR` in the [Gruntfile.js](Gruntfile.js))
@@ -61,11 +59,16 @@ I've only tested the update procedure with mac and windows "fake" versions. Also
 - *fatal error*: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` can freeze app (to reproduce: 1. join any room, 2. send some messages, 3. leave, 4. error)
 - Copy/Paste does not work ([possible fix](https://github.com/rogerwang/node-webkit/issues/1955))!
 - ~~*bug*: No sounds are currently played, mp3 support needs a library shipped with node-webkit, `.ogg` should be preferred~~ fixed by always using `.ogg` when running Cryptocat in node-webkit ([see cryptocat.js line 29](https://github.com/majodev/cryptocat/blob/master/src/core/js/cryptocat.js#L29))
-- Windows app needs to be relaunched after update completed
-- Update procedure might download a `.zip` that cannot be unzipped
+- ~~Windows app needs to be relaunched after update completed~~ fixed.
+- ~~Update procedure might download a `.zip` that cannot be unzipped~~ never encountered again...
 
 ## How to build:
 - Run `make node-webkit` (while your cwd is the project's root folder)
+	- This will trigger the `grunt make` task as as defined in the next section
+	- Creates a `tmp` folder (@project's root dir) to cache node-webkit's runtime and nw app builds
+	- Creates `release` folder (@project's root dir) holds the platform release versions, zipped and ready to be hosted
+- To build the windows version on mac/linux use'll need to install [wine](https://www.winehq.org/) (must be available in your `PATH`) to inject the proper `.ico` into the `.exe`! See [this issue](https://github.com/mllrsohn/node-webkit-builder/issues/19).
+
 
 ## Grunt
 ### `grunt make`

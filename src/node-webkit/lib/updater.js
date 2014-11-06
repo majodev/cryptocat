@@ -82,7 +82,11 @@ Updater.prototype.checkUpdateAvailable = function() {
 	nodeWebkitUpdater.checkNewVersion(function(error, newVersionExists, manifest) {
 		if (error) {
 			// e.g. error connecting to the remote .json file
-			self.emit('error', 'Error during checkUpdateAvailable (nodeWebkitUpdater.checkNewVersion), error: ' + error.stack)
+			self.emit('error', {
+				description: 'Error during checkUpdateAvailable (nodeWebkitUpdater.checkNewVersion).',
+				stack: error.stack,
+				retryCallback: self.checkUpdateAvailable
+			})
 			running = false
 			return false
 		}
@@ -121,7 +125,11 @@ Updater.prototype.downloadUpdate = function() {
 	var fileData = nodeWebkitUpdater.download(function(error, filename) {
 		if (error) {
 			// e.g. connection error
-			self.emit('error', 'Error during downloadUpdate (nodeWebkitUpdater.download), error: ' + error.stack)
+			self.emit('error', {
+				description: 'Error during downloadUpdate (nodeWebkitUpdater.download).',
+				stack: error.stack,
+				retryCallback: self.downloadUpdate
+			})
 			running = false
 			return false
 		}
@@ -129,7 +137,7 @@ Updater.prototype.downloadUpdate = function() {
 		// if we are still here, then the file was properly downloaded
 		// save the filename (prerequisite for unpacking and install to run)
 		downloadedFilename = filename
-		
+
 		self.emit('downloadedUpdate', {
 			remoteVersion: remoteManifest.version,
 			filename: filename
@@ -156,7 +164,7 @@ Updater.prototype.installUpdate = function() {
 	var self = this
 
 	// immediately exit if we are already running (or privates manifest and filename are not set!)
-	if (running || remoteManifest === false || downloadedFilename === false) {
+	if (running || remoteManifest === false ||  downloadedFilename === false) {
 		return false
 	}
 	running = true
@@ -166,7 +174,11 @@ Updater.prototype.installUpdate = function() {
 
 		if (error) {
 			// error during unpacking the file
-			self.emit('error', 'Error during installUpdate (nodeWebkitUpdater.unpack), error: ' + error.stack)
+			self.emit('error', {
+				description: 'Error during installUpdate (nodeWebkitUpdater.unpack).',
+				stack: error.stack,
+				retryCallback: self.installUpdate
+			})
 			running = false
 			return false
 		}
@@ -205,7 +217,11 @@ Updater.prototype.finishUpdate = function() {
 
 	nodeWebkitUpdater.install(copyPath, function(error) {
 		if (error) {
-			self.emit('error', 'Error during finishUpdate (nodeWebkitUpdater.install), error: ' + error.stack)
+			self.emit('error', {
+				description: 'Error during finishUpdate (nodeWebkitUpdater.install).',
+				stack: error.stack,
+				retryCallback: self.installUpdate
+			})
 		} else {
 			// Old version was successfully replaced, application can now be safely restarted.
 			// emit and pass callback reference to observer (who has gui object) to execute restart
