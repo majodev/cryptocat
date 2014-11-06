@@ -4,7 +4,16 @@
 
 ## Status
 **WIP, don't use this for anything apart from testing purposes!**  
-Early prototype working (errors might freeze app).
+[Download prebuild 2.2.1-fake apps here](#let-me-test-this-with-some-prebuild-binaries).
+
+####Mac: auto-update working
+![Cryptocat mac auto-update gif](http://i.giphy.com/3rgXBFpaJeJrhPltkc.gif)
+
+####Windows: auto-update working
+![Cryptocat win auto-update gif](http://i.giphy.com/yoJC2rfqFbOMnvwRpe.gif)
+
+####Linux 32 / Linux 64: untested
+Please download the fake version binaries below and provide feedback.
 
 ## Roadmap
 1. ~~Perform platform builds into `/release` via automated grunt task~~ *done*.
