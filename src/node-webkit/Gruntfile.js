@@ -76,13 +76,15 @@ module.exports = function(grunt) {
 				expand: true,
 				cwd: DIRS.CORE,
 				src: ['**/*.*', '!**/*.mp3'],
-				dest: DIRS.BUILD + 'app/'
+				dest: DIRS.BUILD + 'core/'
 			},
 			'nw': { // copy local nw files to temporary build folder
 				expand: true,
 				cwd: DIRS.LOCAL,
 				// only include the things needed (add all needed node plugins here)
-				src: ['*.*', '!Gruntfile.js', '!README.md', DIRS.NWASSETS + '*.*', 'node_modules/node-webkit-updater/**/*.*'],
+				src: ['*.*', '!Gruntfile.js', '!README.md', DIRS.NWASSETS + '*.*',
+					'node_modules/node-webkit-updater/**/*.*', DIRS.LOCAL + 'lib/**/*.*'
+				],
 				dest: DIRS.BUILD
 			}
 		},
