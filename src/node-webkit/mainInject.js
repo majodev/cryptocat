@@ -14,6 +14,9 @@
 	var pkg = require('./package.json')
 	var updater = require('./lib/updater')
 
+	// bridge to directly attach to functions that mainNode.js exports
+	var logger = process.mainModule.exports.logger
+
 	// constants
 	var STATUS_CSS_STYLE = '<style type="text/css">' +
 		' .updateStatusClickable { color: rgba(255, 40, 40, 0.95) !important; font-weight:bold; cursor: pointer}' +
@@ -25,6 +28,51 @@
 	var oldStatusText
 	var $status
 
+	// ---------------------------------------------------------------------------
+	// Menu and default shortcuts (Cut/Copy/Paste hotkeys on Mac)
+	// see https://github.com/rogerwang/node-webkit/wiki/Menu#menucreatemacbuiltinappname
+	// ---------------------------------------------------------------------------
+
+	var nativeMenuBar = new gui.Menu({
+		type: 'menubar'
+	})
+
+	try {
+		nativeMenuBar.createMacBuiltin(pkg.name, {
+			hideEdit: false,
+			hideWindow: true
+		})
+		coreWindow.menu = nativeMenuBar
+	} catch (ex) {
+		console.error(ex.message)
+	}
+
+	// ---------------------------------------------------------------------------
+	// Keyboard shortcuts
+	// see https://github.com/rogerwang/node-webkit/wiki/Shortcut
+	// ---------------------------------------------------------------------------
+
+	// Create a keyBoardShortcut to show developerTools
+	var devToolsShortcut = new gui.Shortcut({
+		key: 'Ctrl+Shift+J',
+		active: function() {
+			console.log('dev tools keyboard shortcut activated!')
+			coreWindow.showDevTools()
+		},
+		failed: function(msg) {
+			console.error(msg)
+		}
+	})
+
+	// Register global desktop shortcut, which can work without focus.
+	gui.App.registerGlobalHotKey(devToolsShortcut)
+
+
+	// ---------------------------------------------------------------------------
+	// All events to listen lib/updater.js and some convenience methods
+	// Here we bind these events to the cryptocat UI!
+	// ---------------------------------------------------------------------------
+
 	function makeStatusClickable() {
 		$status.addClass('updateStatusClickable')
 	}
@@ -34,16 +82,11 @@
 		$status.off()
 	}
 
-	// ---------------------------------------------------------------------------
-	// All events to listen on from lib/updater.js
-	// Here we bind the events to the cryptocat UI!
-	// ---------------------------------------------------------------------------
-
 	updater.on('error', function(error) {
 		// var retryCallback = error.retryCallback
 
-		console.error('catched' + error.discription)
-		process.mainModule.exports.writeErrorToLog(error.discription + '\n' + error.stack)
+		console.error(error.discription)
+		logger('error: ' + error.discription + ' stack: ' + error.stack + '\n')
 
 		$status.text(error.discription)
 
@@ -127,7 +170,7 @@
 	})
 
 	// ---------------------------------------------------------------------------
-	// Startup
+	// Startup Client View
 	// ---------------------------------------------------------------------------
 
 	// wait for jquery to ready then startup!
@@ -140,14 +183,18 @@
 		oldStatusText = $('#version').text() // remember original text
 		$status = $('#version')
 
+		// all encountered links that are external must be opened in new browser window (the OS default one)
+		// bind to body as this applies also to all links in the future
+		$('body').on('click', 'a[target=_blank]', function(event) {
+			event.preventDefault()
+			gui.Shell.openExternal(this.href)
+			return false
+		})
+
 		// app is hidden during startup, show it the first time...
 		coreWindow.show()
 		// add the status css style
 		$(STATUS_CSS_STYLE).appendTo('head')
-
-		// useful while developing: show dev tools...
-		// coreWindow.showDevTools()
-		// coreWindow.focus()
 
 		// init updater and start auto-update process!
 		updater.init(gui.App.argv)

@@ -13,10 +13,11 @@ var fs = require('fs')
 // https://coderwall.com/p/bnyhbg/get-home-directory-in-nodejs
 var homeDir = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE
 
-
 // write logData to log file in homeDirectory
-function writeErrorToLog(logData) {
-	fs.appendFile(homeDir + '/' + LOG_FILENAME, logData, function(err) {
+function logger(logData) {
+  var currDate = new Date() + ' - '
+
+	fs.appendFile(homeDir + '/' + LOG_FILENAME, currDate + logData, function(err) {
 		if (err) {
 			console.error('Cannot write exception to log file' + err)
 		}
@@ -27,13 +28,15 @@ function writeErrorToLog(logData) {
 // ATTENTION: this won't be the way to go with productive apps!
 // https://github.com/rogerwang/node-webkit/issues/1699
 process.on('uncaughtException', function(e) {
-	var logData = new Date() + ' - error: ' + e.stack + '\n'
+  var logData = 'error: ' + e.stack + '\n'
 
-	// log error to dev console (if open)
-	console.error(e)
+  // log error to dev console (if open)
+  console.error(e)
 
-	writeErrorToLog(logData)
+  logger(logData)
 })
 
-// export this function to allow logging from client modules
-module.exports.writeErrorToLog = writeErrorToLog
+
+// Module Exports
+// export logger to allow logging from client modules
+module.exports.logger = logger

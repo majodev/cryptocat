@@ -31,10 +31,9 @@ Please download the fake version binaries below and provide feedback.
 	- `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)`
 6. Essential UI improvements
 	- ~~Use `.ogg` instead of `.mp3` in node-webkit~~ ([learn why](https://github.com/rogerwang/node-webkit/wiki/Using-MP3-%26-MP4-%28H.264%29-using-the--video--%26--audio--tags.))
-	- ~~Should auto-update really be a separate view during startup?~~ Nope, it it is available directly in the version footer.
+	- ~~Should auto-update really be a separate view during startup?~~ Nope, it's directly available in the version footer of Cryptocat.
 	- Do we need a tray-icon? (it feels akward that the whole app closes, if one window gets closed)
-	- How to do desktop chat notifications?
-	- Multiple chat session windows?
+	- Do we need desktop chat notifications (e.g. via [node-notifier](https://github.com/mikaelbr/node-notifier))?
 7. Installation routines
 	- Provide `.dmg` on OS X?
 	- Provide installer on Windows (we cannot risk to install Cryptocat into `Program files`, [see why here](https://github.com/edjafarov/node-webkit-updater/issues/58))
@@ -53,8 +52,9 @@ The `package.json` file in these binaries has been modified to the version `2.2.
 Well, it's an early prototype (**but it should work, please leave feedback!**)....  
 I've only tested the update procedure with mac and windows "fake" versions.
 
-## Thoughts
-- I ~~don't want to modify~~ want to minimize modifications to any files outside of this `node-webkit`-folder, this should be a target specific contribution!
+## Thoughts and usage
+- Press `Ctrl+Shift+J` (OS X: `CMD+Shift+J`) to open developer tools within running app.
+- I ~~don't want to modify~~ want to minimize modifications to any files outside of the `node-webkit`-folder, as this should be a target specific contribution.
 	- Currently only modified `cryptocat.js` to force usage of `.ogg` within node-webkit
 	- It should be no problem to leave the other files alone, all js injections can be done via node-webkit's [inject-js-end](https://github.com/rogerwang/node-webkit/wiki/Manifest-format#inject-js-start--inject-js-end), see [mainInject.js](mainInject.js)
 - The local `package.json` within this folder must get automatically updated (with values from the root `package.json`) via the local grunt task, in order to make releases as easy as possible
@@ -65,8 +65,8 @@ I've only tested the update procedure with mac and windows "fake" versions.
 	- Version prefixes will be automatically added to the zipped release file for each platform e.g. `Cryptocat_linux32_v2.2.2.tar.gz` (quite limited yet, I feel the Crytocat team definitely wants to use GitHub releases (I still need to add version folder prefixes))
 
 ## Bugs
-- *fatal error*: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` can freeze app (to reproduce: 1. join any room, 2. send some messages, 3. leave, 4. error)
-- Copy/Paste does not work ([possible fix](https://github.com/rogerwang/node-webkit/issues/1955))!
+- *fatal error*: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` ~~can freeze app~~ logs error (to reproduce: 1. join any room, 2. send some messages, 3. leave, 4. error)
+- ~~Copy/Paste does not work ([possible fix](https://github.com/rogerwang/node-webkit/issues/1955))~~ fixed.
 - ~~*bug*: No sounds are currently played, mp3 support needs a library shipped with node-webkit, `.ogg` should be preferred~~ fixed by always using `.ogg` when running Cryptocat in node-webkit ([see cryptocat.js line 29](https://github.com/majodev/cryptocat/blob/master/src/core/js/cryptocat.js#L29))
 - ~~Windows app needs to be relaunched after update completed~~ fixed.
 - ~~Update procedure might download a `.zip` that cannot be unzipped~~ never encountered again...
