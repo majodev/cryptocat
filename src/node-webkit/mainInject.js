@@ -16,6 +16,7 @@
 
 	// bridge to directly attach to functions that mainNode.js exports
 	var logger = process.mainModule.exports.logger
+	var notify = process.mainModule.exports.notify
 
 	// constants
 	var STATUS_CSS_STYLE = '<style type="text/css">' +
@@ -82,6 +83,17 @@
 		$status.off()
 	}
 
+	function startDownload() {
+		undoStatusClickable()
+		updater.downloadUpdate()
+		$status.text('Downloading Cryptocat ' + updater.getSavedRemoteVersion() + ' (' + 0 + '%' + ')')
+	}
+
+	function startInstall() {
+		undoStatusClickable()
+		updater.installUpdate()
+	}
+
 	updater.on('error', function(error) {
 		// var retryCallback = error.retryCallback
 
@@ -106,7 +118,7 @@
 
 	updater.on('noUpdateAvailable', function(options) {
 		console.log('noUpdateAvailable')
-		$status.text('Your Cryptocat ' + options.remoteVersion + ' is the latest version')
+		$status.text(options.remoteVersion + ' is the latest version.')
 
 		setTimeout(function() {
 			// restore old text in version field after a while.
@@ -115,31 +127,35 @@
 	})
 
 	updater.on('updateAvailable', function(options) {
+		var showText = 'Cryptocat ' + options.remoteVersion + ' is available. Click to download!'
+
 		console.log('updateAvailable')
 
 		// ask before downloading!
-		$status.text('Cryptocat ' + options.remoteVersion + ' is available. Click to download!')
+		$status.text(showText)
 		makeStatusClickable()
 		$status.click(function() {
-			undoStatusClickable()
-			updater.downloadUpdate()
-			$status.text('Downloading Cryptocat ' + options.remoteVersion + ' (' + 0 + '%' + ')')
+			startDownload()
 		})
 
+		// desktop notification + callback to start downloading update
+		notify(showText, startDownload)
 	})
 
 	updater.on('downloadedUpdate', function(options) {
+		var showText = 'Cryptocat ' + options.remoteVersion + ' was downloaded. Click to install!'
+
 		console.log('downloadedUpdate')
 
 		// ask before installing!
-		$status.text('Cryptocat ' + options.remoteVersion + ' was downloaded. Click to install!')
+		$status.text(showText)
 		makeStatusClickable()
 		$status.click(function() {
-			undoStatusClickable()
-			updater.installUpdate()
-			$status.off()
+			startInstall()
 		})
 
+		// desktop notification + callback to start install update
+		notify(showText, startInstall)
 	})
 
 	updater.on('downloadProgress', function(options) {
@@ -148,17 +164,18 @@
 	})
 
 	updater.on('unpackingFinished', function(options) {
+		console.log('unpackingFinished')
 		$status.text('Cryptocat ' + options.remoteVersion + ' is installing...')
 	})
 
 	updater.on('installingUpdate', function() {
-		$status.text('Cryptocat is installing...')
 		console.log('installingUpdate')
+		$status.text('Cryptocat is installing...')
 	})
 
 	updater.on('preInstallationFinished', function() {
-		$status.text('Update finished, restarting...')
 		console.log('preInstallationFinished')
+		$status.text('Update finished, restarting...')
 
 		gui.App.quit() // exit the app (a newer instance restarts from tmp)
 	})

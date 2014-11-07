@@ -72,6 +72,9 @@ module.exports = function(grunt) {
 		},
 
 		'copy': {
+			options: {
+				mode: true // keep existing file permissions
+			},
 			'core': { // copy core Cryptocat files to temporary build folder (add app subdirectory)
 				expand: true,
 				cwd: DIRS.CORE,
@@ -81,9 +84,13 @@ module.exports = function(grunt) {
 			'nw': { // copy local nw files to temporary build folder
 				expand: true,
 				cwd: DIRS.LOCAL,
-				// only include the things needed (add all needed node plugins here)
-				src: ['*.*', '!Gruntfile.js', '!README.md', DIRS.NWASSETS + '*.*',
-					'node_modules/node-webkit-updater/**/*.*', DIRS.LOCAL + 'lib/**/*.*'
+				// only include the things needed (add all REALLY needed node plugins here)
+				// (exclude all dev-dependencies only used in grunt)
+				src: ['*.*', '!Gruntfile.js', '!README.md',
+					DIRS.NWASSETS + '*.*',
+					'lib/**/*.*',
+					'node_modules/node-webkit-updater/**/**', 
+					'node_modules/node-notifier/**/**'
 				],
 				dest: DIRS.BUILD
 			}
@@ -109,7 +116,7 @@ module.exports = function(grunt) {
 				winIco: DIRS.NWASSETS + 'logo.ico',
 				version: 'v0.11.0-rc1'
 			},
-			src: DIRS.BUILD + '**/*.*' // src needs grunt glob pattern 
+			src: DIRS.BUILD + '**/**' // src needs grunt glob pattern 
 		},
 
 		'watch': {
