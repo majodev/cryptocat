@@ -36,6 +36,17 @@ function logger(logData) {
 // Object options { message, title, callback }
 function notify(options) {
 
+	var notifyTitle = pkg.name;
+	var notifyMessage = 'no message'
+
+	if (options.title && options.title.length > 0) {
+		notifyTitle = options.title
+	}
+
+	if (options.message && options.message.length > 0) {
+		notifyMessage = options.message
+	}
+
 	if (typeof(options.callback) === 'function') {
 		openNotifyCallback = options.callback
 	} else {
@@ -43,8 +54,8 @@ function notify(options) {
 	}
 
 	notifier.notify({
-		title: (options.title === false || options.title.length === 0) ? pkg.name : options.title,
-		message: (options.message === false || options.message.length === 0) ? 'no message' : options.message, // empty string fails on mac!
+		title: notifyTitle, // empty string is bad here!
+		message: notifyMessage, // empty string fails on mac!
 		icon: path.join(__dirname, pkg.window.icon),
 		contentImage: path.join(__dirname, pkg.window.icon),
 		sound: false, // Only Notification Center or Windows Toasters
