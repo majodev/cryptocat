@@ -54,10 +54,10 @@ I've only tested the update procedure with mac and windows "fake" versions.
 
 ## Thoughts and usage
 - Press `Ctrl+Shift+J` (OS X: `CMD+Shift+J`) to open developer tools within running app.
-- I ~~don't want to modify~~ want to minimize modifications to any files outside of the `node-webkit`-folder, as this should be a target specific contribution.
+- I ~~don't want to modify~~ **want to minimize modifications to any files outside of the `node-webkit`-folder**, as this should be a target specific contribution.
 	- Currently only modified `cryptocat.js` to force usage of `.ogg` within node-webkit and provide a native bridge to desktop-notifications
-	- It should be no problem to leave the other files alone, all js injections can be done via node-webkit's [inject-js-start and inject.js-end](https://github.com/rogerwang/node-webkit/wiki/Manifest-format#inject-js-start--inject-js-end), see [mainInject.js](mainInject.js)
-- The local `package.json` within this folder must get automatically updated (with values from the root `package.json`) via the local grunt task, in order to make releases as easy as possible
+	- It should be no problem to leave the other files alone, all js injections can be done via node-webkit's [inject-js-start and inject.js-end](https://github.com/rogerwang/node-webkit/wiki/Manifest-format#inject-js-start--inject-js-end), see [mainInjectEnd.js](mainInjectEnd.js) and [mainInjectStart.js](mainInjectStart.js)
+- The local `package.json` within this folder **gets automatically updated** (with values from the root `package.json`) via the local grunt task, in order to make releases as easy as possible
 	- ~~Is it a better idea to provide a separate `update-manifest.json` file and don't use update-logic with the local `package.json` (+ don't update it automatically based on the root `package.json` file)?~~ Nope, doubles the work.~~
 - **Make deploys easy**
 	- Use some grunt magic (see [Gruntfile.js](Gruntfile.js))!
