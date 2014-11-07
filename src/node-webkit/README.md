@@ -33,7 +33,7 @@ Please download the fake version binaries below and provide feedback.
 	- ~~Use `.ogg` instead of `.mp3` in node-webkit~~ ([learn why](https://github.com/rogerwang/node-webkit/wiki/Using-MP3-%26-MP4-%28H.264%29-using-the--video--%26--audio--tags.))
 	- ~~Should auto-update really be a separate view during startup?~~ Nope, it's directly available in the version footer of Cryptocat.
 	- Do we need a tray-icon? (it feels akward that the whole app closes, if one window gets closed)
-	- Do we need desktop chat notifications (e.g. via [node-notifier](https://github.com/mikaelbr/node-notifier))?
+	- ~~Do we need desktop chat notifications (e.g. via [node-notifier](https://github.com/mikaelbr/node-notifier))?~~ Done (tested win/mac)
 7. Installation routines
 	- Provide `.dmg` on OS X?
 	- Provide installer on Windows (we cannot risk to install Cryptocat into `Program files`, [see why here](https://github.com/edjafarov/node-webkit-updater/issues/58))
@@ -46,7 +46,7 @@ OK, here's are some "v2.2.1-fake"-Cryptocat binaries to test the update procedur
 - [linux64](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux64_v2.2.1-fake.tar.gz) (untested)
 
 ### What have you done with these fake binaries?
-The `package.json` file in these binaries has been modified to the version `2.2.1-fake`. When you start one of them, the update procedure in [`update.js`](update.js) checks the [`package.json`](package.json) that is hosted on GitHub within this folder. It will determine that your version of Cryptocat is outdated (`2.2.2` is newer), download a newer version (after hitting OK within the confirm-dialog), overwrite your old version and launch the new version.
+The `package.json` file in these binaries has been modified to the version `2.2.1-fake`. When you start one of them, the update procedure in [`lib/updater.js`](lib/updater.js) checks the [`package.json`](package.json) that is hosted on GitHub within this folder. It will determine that your version of Cryptocat is outdated (`2.2.2` is newer), download a newer version (after hitting OK within the confirm-dialog), overwrite your old version and launch the new version.
 
 ### It doesn't work!
 Well, it's an early prototype (**but it should work, please leave feedback!**)....  
@@ -55,8 +55,8 @@ I've only tested the update procedure with mac and windows "fake" versions.
 ## Thoughts and usage
 - Press `Ctrl+Shift+J` (OS X: `CMD+Shift+J`) to open developer tools within running app.
 - I ~~don't want to modify~~ want to minimize modifications to any files outside of the `node-webkit`-folder, as this should be a target specific contribution.
-	- Currently only modified `cryptocat.js` to force usage of `.ogg` within node-webkit
-	- It should be no problem to leave the other files alone, all js injections can be done via node-webkit's [inject-js-end](https://github.com/rogerwang/node-webkit/wiki/Manifest-format#inject-js-start--inject-js-end), see [mainInject.js](mainInject.js)
+	- Currently only modified `cryptocat.js` to force usage of `.ogg` within node-webkit and provide a native bridge to desktop-notifications
+	- It should be no problem to leave the other files alone, all js injections can be done via node-webkit's [inject-js-start and inject.js-end](https://github.com/rogerwang/node-webkit/wiki/Manifest-format#inject-js-start--inject-js-end), see [mainInject.js](mainInject.js)
 - The local `package.json` within this folder must get automatically updated (with values from the root `package.json`) via the local grunt task, in order to make releases as easy as possible
 	- ~~Is it a better idea to provide a separate `update-manifest.json` file and don't use update-logic with the local `package.json` (+ don't update it automatically based on the root `package.json` file)?~~ Nope, doubles the work.~~
 - **Make deploys easy**

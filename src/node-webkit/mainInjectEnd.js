@@ -1,10 +1,10 @@
-// This script is injected by node-webkit after the document object is loaded, 
-// but before onload event is fired
+// This script is injected by node-webkit after all other scripts
+// The injecting JavaScript code is to be executed after the document object is loaded, 
+// before onload event is fired.
 // see "inject-js-end" flag in package.json
 // For more information see https://github.com/rogerwang/node-webkit/wiki/Manifest-format#inject-js-start--inject-js-end
 
 'use strict';
-
 
 // We dont' want to pullute the global namescape (it's a security software!), all is encapsulated.
 (function() {
@@ -28,6 +28,35 @@
 	var coreWindow = gui.Window.get()
 	var oldStatusText
 	var $status
+	var windowIsFocused = false
+
+	// ---------------------------------------------------------------------------
+	// Attach to global NW_DESKTOP_APP object: Desktop notifications bridge
+	// ---------------------------------------------------------------------------
+
+	// options: {image, title, body, timeout}
+	window.NW_DESKTOP_APP.desktopNotification = function desktopNotification(options) {
+
+		// only do desktop notifications if the window is not focused
+		if (windowIsFocused === false) {
+			notify({
+				title: options.title,
+				message: options.body
+			})
+		}
+	}
+
+	// ---------------------------------------------------------------------------
+	// desktop window focus listeners
+	// ---------------------------------------------------------------------------
+
+	coreWindow.on('blur', function() {
+		windowIsFocused = false
+	})
+
+	coreWindow.on('focus', function() {
+		windowIsFocused = true
+	})
 
 	// ---------------------------------------------------------------------------
 	// Menu and default shortcuts (Cut/Copy/Paste hotkeys on Mac)
@@ -92,10 +121,10 @@
 	function startInstall() {
 		undoStatusClickable()
 		updater.installUpdate()
+		$status.text('Unpacking Cryptocat ' + updater.getSavedRemoteVersion() + ' ...')
 	}
 
 	updater.on('error', function(error) {
-		// var retryCallback = error.retryCallback
 
 		console.error(error.discription)
 		logger('error: ' + error.discription + ' stack: ' + error.stack + '\n')
@@ -139,7 +168,11 @@
 		})
 
 		// desktop notification + callback to start downloading update
-		notify(showText, startDownload)
+		notify({
+			message: showText,
+			callback: startDownload
+		})
+
 	})
 
 	updater.on('downloadedUpdate', function(options) {
@@ -155,7 +188,11 @@
 		})
 
 		// desktop notification + callback to start install update
-		notify(showText, startInstall)
+		notify({
+			message: showText,
+			callback: startInstall
+		})
+
 	})
 
 	updater.on('downloadProgress', function(options) {
@@ -210,6 +247,7 @@
 
 		// app is hidden during startup, show it the first time...
 		coreWindow.show()
+		coreWindow.focus()
 		// add the status css style
 		$(STATUS_CSS_STYLE).appendTo('head')
 

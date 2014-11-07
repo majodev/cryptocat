@@ -11,7 +11,8 @@
 	"author": "Nadim Kobeissi <nadim@crypto.cat>",
 	"license": "AGPL3",
 	"main": "core/index.html",
-	"inject-js-end": "mainInject.js",
+	"inject-js-start": "mainInjectStart.js",
+	"inject-js-end": "mainInjectEnd.js",
 	"node-main": "mainNode.js",
 	"window": {
 		"title": "Cryptocat",

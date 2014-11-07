@@ -26,7 +26,7 @@ Cryptocat.me = {
 Cryptocat.buddies = {}
 
 Cryptocat.audioExt = '.mp3'
-if (navigator.userAgent.match(/(OPR)|(Firefox)/) || typeof process === 'object') {
+if (navigator.userAgent.match(/(OPR)|(Firefox)/) || typeof window.NW_DESKTOP_APP === 'object') {
 	Cryptocat.audioExt = '.ogg' // Firefox, opera and node-webkit should use .ogg
 }
 Cryptocat.sounds = {
@@ -957,6 +957,18 @@ var bindSenderElement = function(senderElement) {
 
 var desktopNotification = function(image, title, body, timeout) {
 	Tinycon.setBubble(++Cryptocat.me.newMessages)
+
+	if (typeof window.NW_DESKTOP_APP === 'object' && Cryptocat.desktopNotifications) {
+		// seperate handler for node-webkit as we cannot rely on Cryptocat.me.windowFocus
+		// forward notification to native desktop
+		window.NW_DESKTOP_APP.desktopNotification({
+			image: image,
+			title: title,
+			body: body,
+			timeout: timeout
+		})
+	}
+
 	if (!Cryptocat.desktopNotifications || Cryptocat.me.windowFocus) { return false }
 	// Mac
 	if (navigator.userAgent === 'Chrome (Mac app)') {

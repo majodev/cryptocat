@@ -33,18 +33,18 @@ function logger(logData) {
 
 // desktop notifications via node-notifier
 // https://www.npmjs.org/package/node-notifier
-function notify(msg, notifyCallback) {
+// Object options { message, title, callback }
+function notify(options) {
 
-  if (typeof(notifyCallback) === 'function') {
-    openNotifyCallback = notifyCallback
+  if (typeof(options.callback) === 'function') {
+    openNotifyCallback = options.callback
   } else {
     openNotifyCallback = null
   }
 
   notifier.notify({
-    title: pkg.name,
-    message: msg,
-    // icon: path.join(__dirname, 'core/img/icon-128.png'), // absolute path (not balloons)
+    title: (options.title === false || options.title.length === 0) ? pkg.name : options.title,
+    message: (options.message === false || options.message.length === 0) ? 'no message' : options.message, // empty string fails on mac!
     icon: path.join(__dirname, pkg.window.icon),
     contentImage: path.join(__dirname, pkg.window.icon),
     sound: false, // Only Notification Center or Windows Toasters
