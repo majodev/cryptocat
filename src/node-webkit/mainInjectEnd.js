@@ -38,16 +38,18 @@
 	window.NW_DESKTOP_APP.desktopNotification = function desktopNotification(options) {
 
 		// only do desktop notifications if the window is not focused
+		// if user click the notification it, it will get focused via callback
 		if (windowIsFocused === false) {
 			notify({
 				title: options.title,
-				message: options.body
+				message: options.body,
+				callback: focusMainWindow
 			})
 		}
 	}
 
 	// ---------------------------------------------------------------------------
-	// desktop window focus listeners
+	// desktop window focus listeners and focus function
 	// ---------------------------------------------------------------------------
 
 	coreWindow.on('blur', function() {
@@ -56,7 +58,17 @@
 
 	coreWindow.on('focus', function() {
 		windowIsFocused = true
+		coreWindow.setAlwaysOnTop(false)
+
+		// if available, focus the message text input
+		$('#userInputText').focus()
 	})
+
+	function focusMainWindow() {
+		console.log('focusMainWindow')
+		// hacky solution, bring window to top but reset to false when window gets focused
+		coreWindow.setAlwaysOnTop(true)
+	}
 
 	// ---------------------------------------------------------------------------
 	// Menu and default shortcuts (Cut/Copy/Paste hotkeys on Mac)
@@ -113,12 +125,14 @@
 	}
 
 	function startDownload() {
+		focusMainWindow()
 		undoStatusClickable()
 		updater.downloadUpdate()
 		$status.text('Downloading Cryptocat ' + updater.getSavedRemoteVersion() + ' (' + 0 + '%' + ')')
 	}
 
 	function startInstall() {
+		focusMainWindow()
 		undoStatusClickable()
 		updater.installUpdate()
 		$status.text('Unpacking Cryptocat ' + updater.getSavedRemoteVersion() + ' ...')

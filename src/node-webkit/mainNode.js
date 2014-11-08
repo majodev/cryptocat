@@ -14,7 +14,8 @@ var pkg = require('./package.json')
 var LOG_FILENAME = 'cryptocat-node-webkit-errors.log' // name of the log file outputted on errors to fs
 
 // private vars
-var openNotifyCallback = null // holds reference to callback function on notify click or null
+var openNotifyCallback = null // holds reference to callback function on notify click
+var notifyCallbackAllowed = false
 var homeDir = process.env.HOME || process.env.HOMEPATH || process.env.USERPROFILE // get homedir all platforms
 
 
@@ -49,8 +50,9 @@ function notify(options) {
 
 	if (typeof(options.callback) === 'function') {
 		openNotifyCallback = options.callback
+		notifyCallbackAllowed = true
 	} else {
-		openNotifyCallback = null
+		notifyCallbackAllowed = false
 	}
 
 	notifier.notify({
@@ -59,10 +61,10 @@ function notify(options) {
 		icon: path.join(__dirname, pkg.window.icon),
 		contentImage: path.join(__dirname, pkg.window.icon),
 		sound: false, // Only Notification Center or Windows Toasters
-		wait: openNotifyCallback === null ? false : true, // wait with callback until user action is taken on notification
+		wait: notifyCallbackAllowed, // wait with callback until user action is taken on notification
 		sender: 'com.intel.nw' // mac only, set sender (TODO, change id in plist) https://github.com/alloy/terminal-notifier#options
 	}, function(err, response) {
-		logger('error: ' + err + ' response: ' + response + '\n')
+		logger('notify error: ' + err + ' response: ' + response + '\n')
 		// response is response from notification
 	})
 }
@@ -71,15 +73,15 @@ function notify(options) {
 
 notifier.on('click', function() {
 	// Happens if `wait: true` and user clicks notification
-	if (typeof(openNotifyCallback) === 'function') {
+	if (notifyCallbackAllowed === true && typeof(openNotifyCallback) === 'function') {
 		openNotifyCallback()
-		openNotifyCallback = null
+		notifyCallbackAllowed = false
 	}
 })
 
 notifier.on('timeout', function() {
 	// Happens if `wait: true` and notification closes
-	openNotifyCallback = null
+	notifyCallbackAllowed = false
 })
 
 // Catch all global exceptions for now by this listener
