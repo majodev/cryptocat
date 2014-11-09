@@ -133,7 +133,7 @@ module.exports = function(grunt) {
 		// gzip assets 1-to-1 for production
 		'compress': {
 			options: {
-				dest: ''
+				dest: '' //mac & win - linux needs extra attention
 			},
 			'mac': {
 				options: {
@@ -165,7 +165,8 @@ module.exports = function(grunt) {
 				files: [{
 					expand: true,
 					cwd: DIRS.RELEASE + 'Cryptocat/linux32/',
-					src: ['**']
+					src: ['**'],
+					dest: 'Cryptocat/' // important, needs root folder at tar.gz for node-webkit-updater to operate!
 				}]
 			},
 			'linux64': {
@@ -176,7 +177,8 @@ module.exports = function(grunt) {
 				files: [{
 					expand: true,
 					cwd: DIRS.RELEASE + 'Cryptocat/linux64/',
-					src: ['**']
+					src: ['**'],
+					dest: 'Cryptocat/' // important, needs root folder at tar.gz for node-webkit-updater to operate!
 				}]
 			}
 		}
