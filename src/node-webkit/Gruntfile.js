@@ -50,10 +50,10 @@ module.exports = function(grunt) {
 								'url': REMOTE_UPDATE_DIR + 'Cryptocat_win_v' + rootPkg.version + '.zip'
 							},
 							'linux32': {
-								'url': REMOTE_UPDATE_DIR + 'Cryptocat_linux32_v' + rootPkg.version + '.zip'
+								'url': REMOTE_UPDATE_DIR + 'Cryptocat_linux32_v' + rootPkg.version + '.tar.gz'
 							},
 							'linux64': {
-								'url': REMOTE_UPDATE_DIR + 'Cryptocat_linux64_v' + rootPkg.version + '.zip'
+								'url': REMOTE_UPDATE_DIR + 'Cryptocat_linux64_v' + rootPkg.version + '.tar.gz'
 							}
 						}
 					}
