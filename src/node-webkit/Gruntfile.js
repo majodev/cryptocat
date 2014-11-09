@@ -133,7 +133,7 @@ module.exports = function(grunt) {
 		// gzip assets 1-to-1 for production
 		'compress': {
 			options: {
-				dest: '' //mac & win - linux needs extra attention
+				dest: '' //mac & win standard, no deeper folder nesting
 			},
 			'mac': {
 				options: {
