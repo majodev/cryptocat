@@ -21,14 +21,12 @@ Please download the fake version binaries below and provide feedback.
 3. ~~Desktop apps fetch a github-hosted `package.json` file in a [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater)s' compatible manifest format, download the newer version and execute a self-update procedure~~ *done*.
 	- ~~Problems with finally restarting after updating in Windows (untested [fix](https://github.com/edjafarov/node-webkit-updater/issues/48) might be the solution to this)~~ *works*.
 4. Update app on all platforms **securely**
-	- ~~Manifest (`package.json`) is hosted on a SSL enabled server.~~ as hosted currently, is it enough?
-	- ~~Force downloading new versions only from trusted SLL connections.~~ as hosted currently, is it enough?
-	- SHASUMs?
-	- MITM attacks?
-	- Fix application freezes on connection problems (e.g. when you don't allow communication with LittleSnitch, might be in the domain of [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater))
-5. Fix errors in `cryptocat.js` that may stall the node-webkit engine ([**without** globally catching uncaught exceptions](https://github.com/rogerwang/node-webkit/issues/1699))
+	- ~~Manifest (`package.json`) + releases must be hosted on a SSL enabled server.~~ We will use a raw GitHub urls linking to the local `package.json` and GitHub releases. Both over SSL/https.
+	- **IMPORTANT: We will need DSA signing for updates, see [discussion here](https://github.com/edjafarov/node-webkit-updater/issues/56).** 
+5. Fix errors that may stall the node-webkit engine ([**without** globally catching uncaught exceptions](https://github.com/rogerwang/node-webkit/issues/1699))
 	- All errors are currently globally catched and logged to `YOUR_HOMEDIR/cryptocat-node-webkit-errors.log`
 	- `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)`
+	- Fix application freeze on connection problems (e.g. when you don't allow communication with LittleSnitch during update handling, might be in the domain of [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater))
 6. Essential UI improvements
 	- ~~Use `.ogg` instead of `.mp3` in node-webkit~~ ([learn why](https://github.com/rogerwang/node-webkit/wiki/Using-MP3-%26-MP4-%28H.264%29-using-the--video--%26--audio--tags.))
 	- ~~Should auto-update really be a separate view during startup?~~ Nope, it's directly available in the version footer of Cryptocat.
