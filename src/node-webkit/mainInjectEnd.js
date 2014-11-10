@@ -138,20 +138,24 @@
 		$status.text('Unpacking Cryptocat ' + updater.getSavedRemoteVersion() + ' ...')
 	}
 
+	var errorRetryMethod;
 	updater.on('error', function(error) {
 
-		console.error(error.discription)
-		logger('error: ' + error.discription + ' stack: ' + error.stack + '\n')
+		console.error(error.description)
+		logger('error: ' + error.description + ' stack: ' + error.stack + '\n')
 
-		$status.text(error.discription)
+		$status.text(error.description)
 
-		// ask before retrying after error encountered
-		// $status.text(error.discription + ' Click to retry!')
-		// makeStatusClickable()
-		// $status.click(function() {
-		// 	undoStatusClickable()
-		// 	retryCallback()
-		// })
+		// remember retry method, bind it to updater to execute in right manner
+		errorRetryMethod = error.retryCallback.bind(updater)
+
+		// ask before retrying after error encountered in statusbar
+		$status.text(error.description + ' Click to retry!')
+		makeStatusClickable()
+		$status.click(function() {
+			undoStatusClickable()
+			errorRetryMethod() // execute remembered retry method.
+		})
 	})
 
 	updater.on('checkingForUpdate', function() {
@@ -266,7 +270,9 @@
 		$(STATUS_CSS_STYLE).appendTo('head')
 
 		// init updater and start auto-update process!
+
 		updater.init(gui.App.argv)
+
 	})
 
 }())
