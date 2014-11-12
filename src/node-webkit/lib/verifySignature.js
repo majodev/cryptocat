@@ -22,21 +22,21 @@ var pubkey = fs.readFileSync(path.join(__dirname, '../dsa/dsa_pub.pem')).toStrin
 
 // private functions
 function createDigest(filePath) {
-  var data = fs.readFileSync(filePath)
-  var hash = crypto.createHash(HASH_ALGORITHM)
-  hash.update(data, 'binary')
-  return hash.digest()
+	var data = fs.readFileSync(filePath)
+	var hash = crypto.createHash(HASH_ALGORITHM)
+	hash.update(data, 'binary')
+	return hash.digest()
 }
 
 function verifySignature(digest, DSASignature) {
-  var verifier = crypto.createVerify(VERIFY_ALGORITHM)
-  verifier.update(digest)
-  return verifier.verify(pubkey, DSASignature, 'base64')
+	var verifier = crypto.createVerify(VERIFY_ALGORITHM)
+	verifier.update(digest)
+	return verifier.verify(pubkey, DSASignature, 'base64')
 }
 
 // public
 module.exports = function verifyFileSignature(filePath, DSASignature) {
-  console.log(filePath + ' signature: ' + DSASignature)
+	console.log(filePath + ' signature: ' + DSASignature)
 
-  return verifySignature(createDigest(filePath), DSASignature)
+	return verifySignature(createDigest(filePath), DSASignature)
 }
