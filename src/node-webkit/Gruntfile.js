@@ -200,44 +200,44 @@ module.exports = function(grunt) {
 
 		'shell': {
 			options: {
-        stderr: true
-      },
-      'sign_mac': {
-      	command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_mac_v<%=grunt.option("pkg").version%>.zip' + ' dsa/dsa_priv.pem',
-      	options: {
-      		callback: function setDSAMac(err, stdout, stderr, cb) {
-      			grunt.option('DSAMac', stdout.trim())
-      			cb()
-      		}
-      	}
-      },
-      'sign_win': {
-      	command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_win_v<%=grunt.option("pkg").version%>.zip' + ' dsa/dsa_priv.pem',
-      	options: {
-      		callback: function setDSAMac(err, stdout, stderr, cb) {
-      			grunt.option('DSAWin', stdout.trim())
-      			cb()
-      		}
-      	}
-      },
-      'sign_linux32': {
-      	command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_linux32_v<%=grunt.option("pkg").version%>.tar.gz' + ' dsa/dsa_priv.pem',
-      	options: {
-      		callback: function setDSAMac(err, stdout, stderr, cb) {
-      			grunt.option('DSALinux32', stdout.trim())
-      			cb()
-      		}
-      	}
-      },
-      'sign_linux64': {
-      	command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_linux64_v<%=grunt.option("pkg").version%>.tar.gz' + ' dsa/dsa_priv.pem',
-      	options: {
-      		callback: function setDSAMac(err, stdout, stderr, cb) {
-      			grunt.option('DSALinux64', stdout.trim())
-      			cb()
-      		}
-      	}
-      }
+				stderr: true
+			},
+			'sign_mac': {
+				command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_mac_v<%=grunt.option("pkg").version%>.zip' + ' dsa/dsa_priv.pem',
+				options: {
+					callback: function setDSAMac(err, stdout, stderr, cb) {
+						grunt.option('DSAMac', stdout.trim())
+						cb()
+					}
+				}
+			},
+			'sign_win': {
+				command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_win_v<%=grunt.option("pkg").version%>.zip' + ' dsa/dsa_priv.pem',
+				options: {
+					callback: function setDSAMac(err, stdout, stderr, cb) {
+						grunt.option('DSAWin', stdout.trim())
+						cb()
+					}
+				}
+			},
+			'sign_linux32': {
+				command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_linux32_v<%=grunt.option("pkg").version%>.tar.gz' + ' dsa/dsa_priv.pem',
+				options: {
+					callback: function setDSAMac(err, stdout, stderr, cb) {
+						grunt.option('DSALinux32', stdout.trim())
+						cb()
+					}
+				}
+			},
+			'sign_linux64': {
+				command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_linux64_v<%=grunt.option("pkg").version%>.tar.gz' + ' dsa/dsa_priv.pem',
+				options: {
+					callback: function setDSAMac(err, stdout, stderr, cb) {
+						grunt.option('DSALinux64', stdout.trim())
+						cb()
+					}
+				}
+			}
 		}
 
 	})
