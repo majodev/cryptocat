@@ -1,7 +1,7 @@
 ## Secure updates via DSA
 
 #### Important
-The official Cryptocat project will **NOT** include the private dsa key used for signing updates. `dsa_priv.pem` here is only provided for demonstrative purposes (so add `dsa_priv.pem` to `.gitignore` after generating your new key pairs via `generate_keys.sh`!)
+Normally you would **NOT** include a private dsa key within a public repository. This `dsa_priv.pem` is only provided for demonstrative purposes! If you want to use this in a **productive manner**, add `dsa_priv.pem` to `.gitignore` after generating your own key pairs via `generate_keys.sh`!!!
 
 #### Information
 * `generate_keys.sh` and `sign_update.sh` were borrowed from the [Sparkle Framework](https://github.com/sparkle-project/Sparkle/wiki/publishing-an-update).
