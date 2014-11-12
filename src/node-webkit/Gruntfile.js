@@ -85,7 +85,8 @@ module.exports = function(grunt) {
 
 		'copy': {
 			options: {
-				mode: true // keep existing file permissions
+				mode: true, // keep existing file permissions
+				force: true
 			},
 			'core': { // copy core Cryptocat files to temporary build folder (add app subdirectory)
 				expand: true,
@@ -116,7 +117,8 @@ module.exports = function(grunt) {
 			'cache': DIRS.CACHE,
 			'build': DIRS.BUILD,
 			'releases': DIRS.RELEASE,
-			'releasesNotZipped': DIRS.RELEASE + 'Cryptocat/'
+			'releasesNotZipped': DIRS.RELEASE + 'Cryptocat/',
+			'dsaWhileWatch': DIRS.BUILD + 'dsa'
 		},
 
 		'nodewebkit': { // build the apps from temp build folder src
@@ -139,7 +141,7 @@ module.exports = function(grunt) {
 			'srcChanges': { // only watch local files in node-webkit
 				files: [DIRS.LOCAL + '**/*.*', '!' + DIRS.LOCAL + 'node_modules/**/*.*'],
 				//files: [DIRS.CORE + '**/*.*', DIRS.LOCAL + '**/*.*'],
-				tasks: ['build']
+				tasks: ['clean:dsaWhileWatch','build']
 			}
 		},
 
@@ -257,9 +259,7 @@ module.exports = function(grunt) {
 	grunt.registerTask('makeFake', ['clean:build', 'buildFake', 'release'])
 
 	// build task that need to be performed before the nodewebkit task 
-	// useful to execute only if you are within the DIR.BUILD directory and 
-	// using 'nw .' to run a app directly
-	// best used with the grunt watch task!
+	
 	grunt.registerTask('build', ['update_json:local', 'copy'])
 
 	// same as above BUT change version to 2.2.1 to output a fake release
@@ -268,7 +268,10 @@ module.exports = function(grunt) {
 	// release full node-webkit version for all defined platforms (requires build before)
 	grunt.registerTask('release', ['nodewebkit', 'bundle', 'sign', 'update_json:hosting', 'clean:releasesNotZipped'])
 
-
+	// trigger build and watch task
+	// useful to execute only if you are within the DIR.BUILD directory and 
+	// use 'nw .' to run a app directly
+	grunt.registerTask('dev', ['clean:dsaWhileWatch', 'build', 'watch'])
 
 	// HELPER TASKS
 	grunt.registerTask('bundle', ['readJSON', 'compress'])

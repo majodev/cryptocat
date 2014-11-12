@@ -147,8 +147,8 @@ Updater.prototype.downloadUpdate = function() {
 			if (verifySignature(filename, remoteManifest.packages[platform].dsa) === false) {
 				// OMG, this update is not signed properly!
 				self.emit('error', {
-					description: 'Error: DSA signature not valid!',
-					stack: error.stack,
+					description: 'Error: DSA signature is not valid!',
+					stack: 'filename: ' + filename + ' - remoteManifest: ' +  remoteManifest,
 					retryCallback: self.downloadUpdate
 				})
 				running = false

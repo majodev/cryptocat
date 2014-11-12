@@ -16,8 +16,9 @@ var HASH_ALGORITHM = 'sha1'
 // requires
 var crypto = require('crypto')
 var fs = require('fs')
+var path = require('path')
 
-var pubkey = fs.readFileSync('../dsa/dsa_pub.pem').toString('utf-8')
+var pubkey = fs.readFileSync(path.join(__dirname, '../dsa/dsa_pub.pem')).toString('utf-8')
 
 // private functions
 function createDigest(filePath) {
@@ -35,5 +36,7 @@ function verifySignature(digest, DSASignature) {
 
 // public
 module.exports = function verifyFileSignature(filePath, DSASignature) {
+  console.log(filePath + ' signature: ' + DSASignature)
+
   return verifySignature(createDigest(filePath), DSASignature)
 }
