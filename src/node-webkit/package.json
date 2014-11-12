@@ -31,16 +31,20 @@
 	"manifestUrl": "https://raw.githubusercontent.com/majodev/cryptocat/master/src/node-webkit/package.json",
 	"packages": {
 		"mac": {
-			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_mac_v2.2.2.zip"
+			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_mac_v2.2.2.zip",
+			"dsa": "MCwCFHCuBnQsg5DFq7RBWMMGI8/pTuc9AhRjO155dBrNNkpZXEg6ZflRAw8Ptw=="
 		},
 		"win": {
-			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_win_v2.2.2.zip"
+			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_win_v2.2.2.zip",
+			"dsa": "MC0CFQCgVyhkEeKVZ2lYtQ4UoLGZAQOcnwIUU+Bj+HQ5uFHPnFtV9F2CcbNPtqI="
 		},
 		"linux32": {
-			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux32_v2.2.2.tar.gz"
+			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux32_v2.2.2.tar.gz",
+			"dsa": "MCwCFEAfVn5KxTVNHocJTVLPFPwrzN0gAhQx59FnDoXFuoRZ1RL+Z52wMaHCBw=="
 		},
 		"linux64": {
-			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux64_v2.2.2.tar.gz"
+			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux64_v2.2.2.tar.gz",
+			"dsa": "MC0CFFrB1yeD324J9bFpNXwmolJGYmO7AhUAhJtQp0FeAqgd2dvnpXGHzC/Wcag="
 		}
 	},
 	"dependencies": {
@@ -54,6 +58,7 @@
 		"grunt-contrib-copy": "^0.7.0",
 		"grunt-contrib-watch": "^0.6.1",
 		"grunt-node-webkit-builder": "^0.2.3",
+		"grunt-shell": "^1.1.1",
 		"grunt-update-json": "^0.2.1"
 	}
 }

@@ -6,6 +6,7 @@
 var EventEmitter = require('events').EventEmitter
 var util = require('util')
 var NodeWebkitUpdater = require('node-webkit-updater')
+var verifySignature = require('./verifySignature')
 var pkg = require('../package.json')
 
 // private vars
@@ -15,6 +16,11 @@ var initialized = false // flag if updater has already been initialized once
 var running = false // flag if updater is currently doing something.
 var remoteManifest = false // manifest gets stored here privately if update was found
 var downloadedFilename = false // filename gets stored here privately if update was downloaded
+
+// borrowed from node-webkit-updater to detect platform (app/updater.js)!
+// see https://github.com/edjafarov/node-webkit-updater/blob/master/app/updater.js
+var platform = process.platform;
+platform = /^win/.test(platform) ? 'win' : /^darwin/.test(platform) ? 'mac' : 'linux' + (process.arch === 'ia32' ? '32' : '64')
 
 // -----------------------------------------------------------------------------
 // Constructor of Updater
@@ -134,16 +140,42 @@ Updater.prototype.downloadUpdate = function() {
 			return false
 		}
 
-		// if we are still here, then the file was properly downloaded
-		// save the filename (prerequisite for unpacking and install to run)
-		downloadedFilename = filename
+		// if we are still here, then the file was properly downloaded.
+		// let's verify it's dsa signature!
+		self.emit('verifyingSignature')
+		try {
+			if (verifySignature(filename, remoteManifest.packages[platform].dsa) === false) {
+				// OMG, this update is not signed properly!
+				self.emit('error', {
+					description: 'Error: DSA signature not valid!',
+					stack: error.stack,
+					retryCallback: self.downloadUpdate
+				})
+				running = false
+				return false
 
-		self.emit('downloadedUpdate', {
-			remoteVersion: remoteManifest.version,
-			filename: filename
-		})
+			} else {
+				// clear to install!
+				// save the filename (prerequisite for unpacking and install to run)
+				downloadedFilename = filename
 
-		running = false
+				self.emit('downloadedUpdate', {
+					remoteVersion: remoteManifest.version,
+					filename: filename
+				})
+
+				running = false
+			}
+
+		} catch (e) {
+			self.emit('error', {
+				description: 'Error during verifyingSignature!',
+				stack: e.stack,
+				retryCallback: self.downloadUpdate
+			})
+			running = false
+			return false
+		}
 
 	}, remoteManifest)
 

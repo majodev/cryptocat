@@ -32,7 +32,7 @@ module.exports = function(grunt) {
 			options: {
 				indent: '\t' // always indent with tabs
 			},
-			'nw': {
+			'local': {
 				src: DIRS.ROOT + 'package.json',
 				dest: DIRS.LOCAL + 'package.json',
 				// update local package.json used by node-webkit with data from root package.json
@@ -40,22 +40,7 @@ module.exports = function(grunt) {
 				// the package url to the remote packages gets automatically set!
 				fields: ['version', 'description', 'keywords', 'author', 'license', {
 					packages: function() {
-						var rootPkg = require(DIRS.ROOT + 'package.json')
-
-						return {
-							'mac': {
-								'url': REMOTE_UPDATE_DIR + 'Cryptocat_mac_v' + rootPkg.version + '.zip'
-							},
-							'win': {
-								'url': REMOTE_UPDATE_DIR + 'Cryptocat_win_v' + rootPkg.version + '.zip'
-							},
-							'linux32': {
-								'url': REMOTE_UPDATE_DIR + 'Cryptocat_linux32_v' + rootPkg.version + '.tar.gz'
-							},
-							'linux64': {
-								'url': REMOTE_UPDATE_DIR + 'Cryptocat_linux64_v' + rootPkg.version + '.tar.gz'
-							}
-						}
+						return 'This is not a hostable update manifest.'
 					}
 				}]
 			},
@@ -66,6 +51,33 @@ module.exports = function(grunt) {
 					version: function() {
 						// reset version to 2.2.1-fake to create a FAKE older version!
 						return '2.2.1-fake'
+					}
+				}]
+			},
+			'hosting': {
+				src: DIRS.LOCAL + 'package.json', // LOCAL pkg to LOCAL pkg!!!
+				dest: DIRS.LOCAL + 'package.json',
+				fields: [{
+					packages: function() {
+						var rootPkg = require(DIRS.ROOT + 'package.json')
+						return {
+							'mac': {
+								'url': REMOTE_UPDATE_DIR + 'Cryptocat_mac_v' + rootPkg.version + '.zip',
+								'dsa': grunt.option('DSAMac')
+							},
+							'win': {
+								'url': REMOTE_UPDATE_DIR + 'Cryptocat_win_v' + rootPkg.version + '.zip',
+								'dsa': grunt.option('DSAWin')
+							},
+							'linux32': {
+								'url': REMOTE_UPDATE_DIR + 'Cryptocat_linux32_v' + rootPkg.version + '.tar.gz',
+								'dsa': grunt.option('DSALinux32')
+							},
+							'linux64': {
+								'url': REMOTE_UPDATE_DIR + 'Cryptocat_linux64_v' + rootPkg.version + '.tar.gz',
+								'dsa': grunt.option('DSALinux64')
+							}
+						}
 					}
 				}]
 			}
@@ -90,7 +102,8 @@ module.exports = function(grunt) {
 					DIRS.NWASSETS + '*.*',
 					'lib/**/*.*',
 					'node_modules/node-webkit-updater/**/**', 
-					'node_modules/node-notifier/**/**'
+					'node_modules/node-notifier/**/**',
+					'dsa/dsa_pub.pem'
 				],
 				dest: DIRS.BUILD
 			}
@@ -181,6 +194,48 @@ module.exports = function(grunt) {
 					dest: 'Cryptocat/' // important, needs root folder at tar.gz for node-webkit-updater to operate!
 				}]
 			}
+		},
+
+		'shell': {
+			options: {
+        stderr: true
+      },
+      'sign_mac': {
+      	command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_mac_v<%=grunt.option("pkg").version%>.zip' + ' dsa/dsa_priv.pem',
+      	options: {
+      		callback: function setDSAMac(err, stdout, stderr, cb) {
+      			grunt.option('DSAMac', stdout.trim())
+      			cb()
+      		}
+      	}
+      },
+      'sign_win': {
+      	command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_win_v<%=grunt.option("pkg").version%>.zip' + ' dsa/dsa_priv.pem',
+      	options: {
+      		callback: function setDSAMac(err, stdout, stderr, cb) {
+      			grunt.option('DSAWin', stdout.trim())
+      			cb()
+      		}
+      	}
+      },
+      'sign_linux32': {
+      	command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_linux32_v<%=grunt.option("pkg").version%>.tar.gz' + ' dsa/dsa_priv.pem',
+      	options: {
+      		callback: function setDSAMac(err, stdout, stderr, cb) {
+      			grunt.option('DSALinux32', stdout.trim())
+      			cb()
+      		}
+      	}
+      },
+      'sign_linux64': {
+      	command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_linux64_v<%=grunt.option("pkg").version%>.tar.gz' + ' dsa/dsa_priv.pem',
+      	options: {
+      		callback: function setDSAMac(err, stdout, stderr, cb) {
+      			grunt.option('DSALinux64', stdout.trim())
+      			cb()
+      		}
+      	}
+      }
 		}
 
 	})
@@ -192,6 +247,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-clean')
 	grunt.loadNpmTasks('grunt-contrib-watch')
 	grunt.loadNpmTasks('grunt-contrib-compress')
+	grunt.loadNpmTasks('grunt-shell') 
 
 	// This default task performs all needed steps to release apps with nodewebkit
 	grunt.registerTask('default', ['make'])
@@ -204,13 +260,19 @@ module.exports = function(grunt) {
 	// useful to execute only if you are within the DIR.BUILD directory and 
 	// using 'nw .' to run a app directly
 	// best used with the grunt watch task!
-	grunt.registerTask('build', ['update_json:nw', 'copy'])
+	grunt.registerTask('build', ['update_json:local', 'copy'])
 
 	// same as above BUT change version to 2.2.1 to output a fake release
 	grunt.registerTask('buildFake', ['update_json:fake', 'copy'])
 
 	// release full node-webkit version for all defined platforms (requires build before)
-	grunt.registerTask('release', ['readJSON', 'nodewebkit', 'compress', 'clean:releasesNotZipped'])
+	grunt.registerTask('release', ['nodewebkit', 'bundle', 'sign', 'update_json:hosting', 'clean:releasesNotZipped'])
+
+
+
+	// HELPER TASKS
+	grunt.registerTask('bundle', ['readJSON', 'compress'])
+	grunt.registerTask('sign', ['readJSON', 'shell'])
 
 	// task that reads & saves the proper updated version of the local package.json 
 	// even after it was updated from root and sets via grunt.options to use fields

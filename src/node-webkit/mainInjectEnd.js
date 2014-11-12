@@ -218,6 +218,11 @@
 		$status.text('Downloading Cryptocat ' + options.remoteVersion + ' (' + options.percentage + '%' + ')')
 	})
 
+	updater.on('verifyingSignature', function() {
+		console.log('verifyingSignature')
+		$status.text('Verifying DSA signature...')
+	})
+
 	updater.on('unpackingFinished', function(options) {
 		console.log('unpackingFinished')
 		$status.text('Cryptocat ' + options.remoteVersion + ' is installing...')
