@@ -22,7 +22,7 @@ Please download the fake version binaries below and provide feedback.
 	- ~~Problems with finally restarting after updating in Windows (untested [fix](https://github.com/edjafarov/node-webkit-updater/issues/48) might be the solution to this)~~ *works*.
 4. Update app on all platforms **securely**
 	- ~~Manifest (`package.json`) + releases must be hosted on a SSL enabled server.~~ We will use a raw GitHub urls linking to the local `package.json` and GitHub releases. Both over SSL/https, but this connection does not ship [Extended Validation Certifactes](http://en.wikipedia.org/wiki/Extended_Validation_Certificate).
-	- **TO ENFORCE SECURITY: We will need DSA signing for updates, see [discussion here](https://github.com/edjafarov/node-webkit-updater/issues/56).** I still need to look into that...
+	- **TO ENFORCE SECURITY: I've implemented DSA signing for updates, see [discussion here](https://github.com/edjafarov/node-webkit-updater/issues/56).** then hop into the folder [dsa](dsa/README.md). Verification is done via [`lib/verifySignature.js`](lib/verifySignature.js)
 5. Fix errors that may stall the node-webkit engine ([**without** globally catching uncaught exceptions](https://github.com/rogerwang/node-webkit/issues/1699))
 	- All errors are currently globally catched and logged to `YOUR_HOMEDIR/cryptocat-node-webkit-errors.log`
 	- `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)`
@@ -61,6 +61,7 @@ I've only tested the update procedure with mac and windows "fake" versions.
 	- Use some grunt magic (see [Gruntfile.js](Gruntfile.js))!
 	- Constant remote path where the most up-to-date versions of Cryptocat will live, the urls to the newer versions in the remote `package.json` need to be automatically updated in the local `package.json` (se `REMOTE_UPDATE_DIR` in the [Gruntfile.js](Gruntfile.js))
 	- Version prefixes will be automatically added to the zipped release file for each platform e.g. `Cryptocat_linux32_v2.2.2.tar.gz` (quite limited yet, I feel the Crytocat team definitely wants to use GitHub releases (I still need to add version folder prefixes))
+	- Signing the updates takes place automatically and signature is appended to `package.json`'s update manifest data. For more information [see `dsa/README.md`](dsa/README.md)
 
 ## Bugs
 - *fatal error*: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` ~~can freeze app~~ logs error (to reproduce: 1. join any room, 2. send some messages, 3. leave, 4. error)
