@@ -82,7 +82,7 @@
 	try {
 		nativeMenuBar.createMacBuiltin(pkg.name, {
 			hideEdit: false,
-			hideWindow: true
+			hideWindow: false
 		})
 		coreWindow.menu = nativeMenuBar
 	} catch (ex) {

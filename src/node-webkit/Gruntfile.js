@@ -129,7 +129,7 @@ module.exports = function(grunt) {
 				cacheDir: DIRS.CACHE,
 				macIcns: DIRS.NWASSETS + 'Cryptocat.icns',
 				winIco: DIRS.NWASSETS + 'logo.ico',
-				version: 'v0.11.0-rc1'
+				version: 'v0.11.0'
 			},
 			src: DIRS.BUILD + '**/**' // src needs grunt glob pattern 
 		},

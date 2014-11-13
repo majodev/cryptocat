@@ -32,19 +32,19 @@
 	"packages": {
 		"mac": {
 			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_mac_v2.2.2.zip",
-			"dsa": "MCwCFF50/AA/oyiIWoUAO4RR9WMZQIssAhQROWstxDKSVeFAuUhPkKmzg3/GXw=="
+			"dsa": "MCwCFAwsHzyXemthp2ifwsIP5sdUm/qWAhQycKJviayf6xC5vg2r6vh0btJmJA=="
 		},
 		"win": {
 			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_win_v2.2.2.zip",
-			"dsa": "MCwCFHuJrPDcAZyE3mKbT57poEb/NUQHAhQMksJXnA1PgaVUlBqRNuhiX0rD2A=="
+			"dsa": "MCwCFFm/AwtxUEhYzE2sEw7egVJQFWwjAhQCWO3FPpr4VSFVr+e6HZCt/nAwTQ=="
 		},
 		"linux32": {
 			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux32_v2.2.2.tar.gz",
-			"dsa": "MCwCFGWRk5JI2f7fxpX3q+WeLx0798fBAhRDzjGP8dzZEMB62GYyYh9Gb/EgFQ=="
+			"dsa": "MC0CFHWtLDpPiNMDzImatepydMX3wCZAAhUAjdrUmp8hAhuKCcBR4DtCEHmAQw8="
 		},
 		"linux64": {
 			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux64_v2.2.2.tar.gz",
-			"dsa": "MCwCFEfAQTI7t5bn8/dmG9vgh1LwnYIWAhRDfm/c/SjBmepyQYzKOUCYmud73w=="
+			"dsa": "MCwCFDz8vAWc0Fkfo1e38QQfUKeThgSYAhRsiRWo43buLbc6K+dm5o0rYdZc6w=="
 		}
 	},
 	"dependencies": {
