@@ -64,8 +64,12 @@ function notify(options) {
 		wait: notifyCallbackAllowed, // wait with callback until user action is taken on notification
 		sender: 'com.intel.nw' // mac only, set sender (TODO, change id in plist) https://github.com/alloy/terminal-notifier#options
 	}, function(err, response) {
-		logger('notify error: ' + err + ' response: ' + response + '\n')
-		// response is response from notification
+		// catch, these are general errors on response Timeout and Activate. 
+		// They are not bad and should not be file-logged. Hence exclude this...
+		// logger('notify error: ' + err + ' response: ' + response + '\n')
+
+		// only provide info via console.error
+		console.error('catched notify error: ' + err + ' response: ' + response + '\n')
 	})
 }
 

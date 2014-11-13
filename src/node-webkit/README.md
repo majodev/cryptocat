@@ -31,7 +31,8 @@ Linux64 builds work, **please provide feedback for linux32!**
 	- [✓] **Bad**: All errors are currently globally catched and logged to `YOUR_HOMEDIR/cryptocat-node-webkit-errors.log` **This is bad and no productive solution!**
 	- [--] **Error**: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` **Unsolved, fix needed before global catching can be disabled.**
 	- [--] **Fatal**: Little Snitch may cause crash on block ([see this issue](https://github.com/rogerwang/node-webkit/issues/2585)) **Unsolved FATAL error, app crashes! Revert to a previous version of node-webkit?**
-	- [✓] fixed Bug: Copy/Paste does not work ([possible fix](https://github.com/rogerwang/node-webkit/issues/1955))fixed.
+	- [--] **BUG**: `node-webkit Helper` can have a pretty high CPU usage on long usage. Unresolved, Mac only? 
+	- [✓] fixed Bug: Copy/Paste does not work ([possible fix](https://github.com/rogerwang/node-webkit/issues/1955))
 	- [✓] fixed Bug: No sounds are currently played, mp3 support needs a library shipped with node-webkit, `.ogg` should be preferred. Fixed by always using `.ogg` when running Cryptocat in node-webkit ([see cryptocat.js line 29](https://github.com/majodev/cryptocat/blob/master/src/core/js/cryptocat.js#L29))
 	- [✓] fixed Bug: Windows app needs to be relaunched after update completed.
 	- [✓] fixed Bug: Update procedure might download a `.zip` that cannot be unzipped.
