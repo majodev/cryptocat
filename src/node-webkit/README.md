@@ -22,18 +22,18 @@ Please download the fake version binaries below and provide feedback.
 * [✓] Update app on all platforms **securely**
 	- [✓] Manifest (`package.json`) + releases must be hosted on a SSL enabled server. We will use a raw GitHub urls linking to the local `package.json` and GitHub releases. Both over SSL/https! **Attention:** This connection does not ship [Extended Validation Certifactes](http://en.wikipedia.org/wiki/Extended_Validation_Certificate).
 	- [✓] **ENFORCE SECURITY: DSA signing for updates is required!** See [this discussion here](https://github.com/edjafarov/node-webkit-updater/issues/56) then hop into the [dsa folder](dsa/) for further information. Verification is done via [`lib/verifySignature.js`](lib/verifySignature.js)
-* [-] Fix errors that may stall the node-webkit engine ([**without** globally catching uncaught exceptions](https://github.com/rogerwang/node-webkit/issues/1699))
-	- [-] All errors are currently globally catched and logged to `YOUR_HOMEDIR/cryptocat-node-webkit-errors.log` **(this is bad and no productive solution!)**
-	- [-] `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` (creators, fix that!)
-	- [-] Little Snitch may cause crash on block ([see this issue](https://github.com/rogerwang/node-webkit/issues/2585)) (unsolved, revert to a previous version of node-webkit?))
-* Essential UI improvements
+* [--] Fix errors that may stall the node-webkit engine ([**without** globally catching uncaught exceptions](https://github.com/rogerwang/node-webkit/issues/1699))
+	- [--] All errors are currently globally catched and logged to `YOUR_HOMEDIR/cryptocat-node-webkit-errors.log` **(this is bad and no productive solution!)**
+	- [--] `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` (creators, fix that!)
+	- [--] Little Snitch may cause crash on block ([see this issue](https://github.com/rogerwang/node-webkit/issues/2585)) (unsolved, revert to a previous version of node-webkit?))
+* [--] Essential UI improvements
 	- [✓] Use `.ogg` instead of `.mp3` in node-webkit ([learn why](https://github.com/rogerwang/node-webkit/wiki/Using-MP3-%26-MP4-%28H.264%29-using-the--video--%26--audio--tags.))
 	- [✓] Should auto-update is directly available in the version footer of Cryptocat.
-	- [-] Do we need a tray-icon? (it feels akward that the whole app closes, if one window gets closed)
+	- [--] Do we need a tray-icon? (it feels akward that the whole app closes, if one window gets closed)
 	- [✓] Desktop chat notifications (e.g. via [node-notifier](https://github.com/mikaelbr/node-notifier)) (tested win/mac)
-* Installation routines
-	- [-] Provide `.dmg` on OS X?
-	- [-] Provide installer on Windows (we cannot risk to install Cryptocat into `Program files`, [see why here](https://github.com/edjafarov/node-webkit-updater/issues/58))
+* [--] Installation routines
+	- [--] Provide `.dmg` on OS X?
+	- [--] Provide installer on Windows (we cannot risk to install Cryptocat into `Program files`, [see why here](https://github.com/edjafarov/node-webkit-updater/issues/58))
 
 ## Let me **test** this with some prebuild binaries!
 OK, here's are some "v2.2.1-fake"-Cryptocat binaries to test the update procedure:
@@ -63,7 +63,7 @@ I've only tested the update procedure with mac and windows "fake" versions.
 	- Signing the updates takes place automatically and signature is appended to `package.json`'s update manifest data. For more information [see `dsa/README.md`](dsa/README.md)
 
 ## Bugs
-- [-] *fatal error*: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` ~~can freeze app~~ logs error (to reproduce: 1. join any room, 2. send some messages, 3. leave, 4. error)
+- [--] *fatal error*: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` ~~can freeze app~~ logs error (to reproduce: 1. join any room, 2. send some messages, 3. leave, 4. error)
 - [✓] ~~Copy/Paste does not work ([possible fix](https://github.com/rogerwang/node-webkit/issues/1955))~~ fixed.
 - [✓] ~~*bug*: No sounds are currently played, mp3 support needs a library shipped with node-webkit, `.ogg` should be preferred~~ fixed by always using `.ogg` when running Cryptocat in node-webkit ([see cryptocat.js line 29](https://github.com/majodev/cryptocat/blob/master/src/core/js/cryptocat.js#L29))
 - [✓] ~~Windows app needs to be relaunched after update completed~~ fixed.

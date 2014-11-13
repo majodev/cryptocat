@@ -4,7 +4,7 @@
 # THIS IS AN UNOFFICIAL FORK of CRYPTOCAT! BE CAREFUL!
 > An attempt to build Cryptocat desktop apps for all platforms by bundling them via [node-webkit](https://github.com/rogerwang/node-webkit) and utilizing [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater) for auto-updating.
 
-# **WIP!** see [src/node-webkit](src/node-webkit).
+# **[WIP! see `src/node-webkit`](src/node-webkit)**
 
 
 ###Browser-based app for easy to use, accessible encrypted chat.
