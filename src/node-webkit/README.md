@@ -96,3 +96,6 @@ I've only tested the update procedure with mac and windows "fake" versions.
 
 ### `grunt makeFake`
 Same as `grunt make` but sets version to `2.2.1-fake`
+
+## Test signature verification before hosting
+After `make node-webkit` OR `grunt make` OR `grunt makeFake` you can test all appended DSA signatures (inside your the local hostable `package.json`) against your public key (in `dsa/`) and the bundled files in `PROJECT_ROOT/release/` by running `mocha` (if globally installed) or `npm test` (cwd is THIS dir).

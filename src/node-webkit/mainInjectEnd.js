@@ -131,7 +131,7 @@
 		focusMainWindow()
 		undoStatusClickable()
 		updater.downloadUpdate()
-		$status.text('Downloading Cryptocat ' + updater.getSavedRemoteVersion() + ' (' + 0 + '%' + ')')
+		$status.text('Downloading ' + updater.getSavedRemoteVersion() + ' (' + 0 + '%' + ')')
 	}
 
 	// Tell lib/updater.js to install update + update UI
@@ -139,7 +139,7 @@
 		focusMainWindow()
 		undoStatusClickable()
 		updater.installUpdate()
-		$status.text('Unpacking Cryptocat ' + updater.getSavedRemoteVersion() + ' ...')
+		$status.text('Unpacking ' + updater.getSavedRemoteVersion() + ' ...')
 	}
 
 	// Log errors from updater, add retry callback to desktop notification and version footer
@@ -166,7 +166,7 @@
 	// append clickable version footer and callback in desktop notification when update is available.
 	// callback => startDownload()
 	updater.on('updateAvailable', function(options) {
-		var showText = 'Cryptocat ' + options.remoteVersion + ' is available. Click to download!'
+		var showText = options.remoteVersion + ' is available. Click to download!'
 
 		console.log('updateAvailable')
 
@@ -188,7 +188,7 @@
 	// append clickable version footer and callback in desktop notification on download + verification finished.
 	// callback => startInstall()
 	updater.on('downloadedUpdate', function(options) {
-		var showText = 'Cryptocat ' + options.remoteVersion + ' was downloaded. Click to install!'
+		var showText = options.remoteVersion + ' downloaded and verified. Click to install!'
 
 		console.log('downloadedUpdate')
 
@@ -242,22 +242,22 @@
 	})
 
 	updater.on('downloadProgress', function(options) {
-		$status.text('Downloading Cryptocat ' + options.remoteVersion + ' (' + options.percentage + '%' + ')')
+		$status.text('Downloading ' + options.remoteVersion + ' (' + options.percentage + '%' + ')')
 	})
 
 	updater.on('verifyingSignature', function() {
 		console.log('verifyingSignature')
-		$status.text('Verifying DSA signature...')
+		$status.text('Verifying ' + updater.getSavedRemoteVersion() + ' DSA signature...')
 	})
 
 	updater.on('unpackingFinished', function(options) {
 		console.log('unpackingFinished')
-		$status.text('Cryptocat ' + options.remoteVersion + ' is installing...')
+		$status.text(options.remoteVersion + ' is installing...')
 	})
 
 	updater.on('installingUpdate', function() {
 		console.log('installingUpdate')
-		$status.text('Cryptocat is installing...')
+		$status.text(pkg.version + ' is installing...')
 	})
 
 

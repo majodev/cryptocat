@@ -143,17 +143,18 @@ Updater.prototype.downloadUpdate = function() {
 		// if we are still here, then the file was properly downloaded.
 		// let's verify it's dsa signature!
 		self.emit('verifyingSignature')
-		try {
-			if (verifySignature(filename, remoteManifest.packages[platform].dsa) === false) {
+			// try {
+
+		verifySignature.verifyFileSignatureAsync(filename, remoteManifest.packages[platform].dsa, function(val) {
+			if (val === false) {
 				// OMG, this update is not signed properly!
 				self.emit('error', {
 					description: 'Error: DSA signature is not valid!',
-					stack: 'filename: ' + filename + ' - remoteManifest: ' +  remoteManifest,
+					stack: 'filename: ' + filename + ' - remoteManifest: ' + remoteManifest,
 					retryCallback: self.downloadUpdate
 				})
 				running = false
 				return false
-
 			} else {
 				// clear to install!
 				// save the filename (prerequisite for unpacking and install to run)
@@ -166,16 +167,40 @@ Updater.prototype.downloadUpdate = function() {
 
 				running = false
 			}
+		})
 
-		} catch (e) {
-			self.emit('error', {
-				description: 'Error during verifyingSignature!',
-				stack: e.stack,
-				retryCallback: self.downloadUpdate
-			})
-			running = false
-			return false
-		}
+		// 	if (verifySignature.verifyFileSignature(filename, remoteManifest.packages[platform].dsa) === false) {
+		// 		// OMG, this update is not signed properly!
+		// 		self.emit('error', {
+		// 			description: 'Error: DSA signature is not valid!',
+		// 			stack: 'filename: ' + filename + ' - remoteManifest: ' + remoteManifest,
+		// 			retryCallback: self.downloadUpdate
+		// 		})
+		// 		running = false
+		// 		return false
+
+		// 	} else {
+		// 		// clear to install!
+		// 		// save the filename (prerequisite for unpacking and install to run)
+		// 		downloadedFilename = filename
+
+		// 		self.emit('downloadedUpdate', {
+		// 			remoteVersion: remoteManifest.version,
+		// 			filename: filename
+		// 		})
+
+		// 		running = false
+		// 	}
+
+		// } catch (e) {
+		// 	self.emit('error', {
+		// 		description: 'Error during verifyingSignature!',
+		// 		stack: e.stack,
+		// 		retryCallback: self.downloadUpdate
+		// 	})
+		// 	running = false
+		// 	return false
+		// }
 
 	}, remoteManifest)
 
