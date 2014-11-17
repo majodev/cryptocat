@@ -1,64 +1,64 @@
 {
-  "name": "Cryptocat",
-  "version": "2.2.2",
-  "description": "Web Instant Messaging App With Accessible Encryption",
-  "keywords": [
-    "encryption",
-    "crypto",
-    "js",
-    "web"
-  ],
-  "author": "Nadim Kobeissi <nadim@crypto.cat>",
-  "license": "AGPL3",
-  "main": "core/index.html",
-  "inject-js-start": "mainInjectStart.js",
-  "inject-js-end": "mainInjectEnd.js",
-  "node-main": "mainNode.js",
-  "window": {
-    "title": "Cryptocat",
-    "toolbar": false,
-    "frame": true,
-    "width": 735,
-    "height": 610,
-    "min_width": 735,
-    "min_height": 610,
-    "max_width": 735,
-    "max_height": 610,
-    "resizable": false,
-    "show": false,
-    "icon": "assets/icon-128.png"
-  },
-  "manifestUrl": "https://raw.githubusercontent.com/majodev/cryptocat/master/src/node-webkit/package.json",
-  "packages": {
-    "mac": {
-      "url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_mac_v2.2.2.zip",
-      "dsa": "MCwCFAwsHzyXemthp2ifwsIP5sdUm/qWAhQycKJviayf6xC5vg2r6vh0btJmJA=="
-    },
-    "win": {
-      "url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_win_v2.2.2.zip",
-      "dsa": "MCwCFFm/AwtxUEhYzE2sEw7egVJQFWwjAhQCWO3FPpr4VSFVr+e6HZCt/nAwTQ=="
-    },
-    "linux32": {
-      "url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux32_v2.2.2.tar.gz",
-      "dsa": "MC0CFHWtLDpPiNMDzImatepydMX3wCZAAhUAjdrUmp8hAhuKCcBR4DtCEHmAQw8="
-    },
-    "linux64": {
-      "url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux64_v2.2.2.tar.gz",
-      "dsa": "MCwCFDz8vAWc0Fkfo1e38QQfUKeThgSYAhRsiRWo43buLbc6K+dm5o0rYdZc6w=="
-    }
-  },
-  "dependencies": {
-    "node-notifier": "^4.0.2",
-    "node-webkit-updater": "^0.2.3"
-  },
-  "devDependencies": {
-    "grunt": "^0.4.5",
-    "grunt-contrib-clean": "^0.6.0",
-    "grunt-contrib-compress": "^0.12.0",
-    "grunt-contrib-copy": "^0.7.0",
-    "grunt-contrib-watch": "^0.6.1",
-    "grunt-node-webkit-builder": "git+https://github.com/mllrsohn/grunt-node-webkit-builder.git",
-    "grunt-shell": "^1.1.1",
-    "grunt-update-json": "^0.2.1"
-  }
+	"name": "Cryptocat",
+	"version": "2.2.2",
+	"description": "Web Instant Messaging App With Accessible Encryption",
+	"keywords": [
+		"encryption",
+		"crypto",
+		"js",
+		"web"
+	],
+	"author": "Nadim Kobeissi <nadim@crypto.cat>",
+	"license": "AGPL3",
+	"main": "core/index.html",
+	"inject-js-start": "mainInjectStart.js",
+	"inject-js-end": "mainInjectEnd.js",
+	"node-main": "mainNode.js",
+	"window": {
+		"title": "Cryptocat",
+		"toolbar": false,
+		"frame": true,
+		"width": 735,
+		"height": 610,
+		"min_width": 735,
+		"min_height": 610,
+		"max_width": 735,
+		"max_height": 610,
+		"resizable": false,
+		"show": false,
+		"icon": "assets/icon-128.png"
+	},
+	"manifestUrl": "https://raw.githubusercontent.com/majodev/cryptocat/master/src/node-webkit/package.json",
+	"packages": {
+		"mac": {
+			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_mac_v2.2.2.zip",
+			"dsa": "MC0CFQCg16oLpY9vjxO6atgUX2JxmuKMTAIUS5Jso645GEgUs17KaFqgL+MKqLE="
+		},
+		"win": {
+			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_win_v2.2.2.zip",
+			"dsa": "MCwCFEVzXgvKT7p6CPpYaNi67jmfKiNvAhRGRjUAfl9BVarMbo9ZXZ7ivRAFiQ=="
+		},
+		"linux32": {
+			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux32_v2.2.2.tar.gz",
+			"dsa": "MC0CFQCArkCWY5qq7nSFkkzQTaJMxbc03QIULxWkgrqHzzL4rurjQdnNQI98bw4="
+		},
+		"linux64": {
+			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux64_v2.2.2.tar.gz",
+			"dsa": "MCwCFEbrTCL1Wh9M7lBMFpgectsWFYxiAhR18Rf2+x0QmxSpfyHEcYk6DHVYyQ=="
+		}
+	},
+	"dependencies": {
+		"node-notifier": "^4.0.2",
+		"node-webkit-updater": "^0.2.3"
+	},
+	"devDependencies": {
+		"grunt": "^0.4.5",
+		"grunt-contrib-clean": "^0.6.0",
+		"grunt-contrib-compress": "^0.12.0",
+		"grunt-contrib-copy": "^0.7.0",
+		"grunt-contrib-watch": "^0.6.1",
+		"grunt-node-webkit-builder": "git+https://github.com/mllrsohn/grunt-node-webkit-builder.git",
+		"grunt-shell": "^1.1.1",
+		"grunt-update-json": "^0.2.1"
+	}
 }

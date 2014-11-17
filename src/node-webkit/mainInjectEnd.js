@@ -9,6 +9,12 @@
 // We dont' want to pullute the global namescape (it's a security software!), all is encapsulated.
 (function() {
 
+	// constant, CSS style to append when updates are available
+	var STATUS_CSS_STYLE = '<style type="text/css">' +
+		' .updateStatusClickable { color: rgba(255, 40, 40, 0.95) !important; font-weight:bold; cursor: pointer}' +
+		' .updateStatusClickable:hover { text-decoration: underline; }' +
+		'</style>'
+
 	// requires
 	var gui = require('nw.gui')
 	var pkg = require('./package.json')
@@ -17,12 +23,6 @@
 	// bridge to directly attach to functions that mainNode.js exports
 	var logger = process.mainModule.exports.logger
 	var notify = process.mainModule.exports.notify
-
-	// constants
-	var STATUS_CSS_STYLE = '<style type="text/css">' +
-		' .updateStatusClickable { color: rgba(255, 40, 40, 0.95) !important; font-weight:bold; cursor: pointer}' +
-		' .updateStatusClickable:hover { text-decoration: underline; }' +
-		'</style>'
 
 	// private vars
 	var coreWindow = gui.Window.get()
@@ -111,19 +111,22 @@
 
 
 	// ---------------------------------------------------------------------------
-	// All events to listen lib/updater.js and some convenience methods
+	// Listen to lib/updater.js + some convenience methods
 	// Here we bind these events to the cryptocat UI!
 	// ---------------------------------------------------------------------------
 
+	// make version in footer clickable
 	function makeStatusClickable() {
 		$status.addClass('updateStatusClickable')
 	}
 
+	// undo clickable
 	function undoStatusClickable() {
 		$status.removeClass('updateStatusClickable')
 		$status.off()
 	}
 
+	// Tell lib/updater.js to download update + update UI
 	function startDownload() {
 		focusMainWindow()
 		undoStatusClickable()
@@ -131,6 +134,7 @@
 		$status.text('Downloading Cryptocat ' + updater.getSavedRemoteVersion() + ' (' + 0 + '%' + ')')
 	}
 
+	// Tell lib/updater.js to install update + update UI
 	function startInstall() {
 		focusMainWindow()
 		undoStatusClickable()
@@ -138,6 +142,7 @@
 		$status.text('Unpacking Cryptocat ' + updater.getSavedRemoteVersion() + ' ...')
 	}
 
+	// Log errors from updater, add retry callback to desktop notification and version footer
 	var errorRetryMethod;
 	updater.on('error', function(error) {
 
@@ -158,21 +163,8 @@
 		})
 	})
 
-	updater.on('checkingForUpdate', function() {
-		console.log('checkingForUpdate')
-		$status.text('Checking for updates...')
-	})
-
-	updater.on('noUpdateAvailable', function(options) {
-		console.log('noUpdateAvailable')
-		$status.text(options.remoteVersion + ' is the latest version.')
-
-		setTimeout(function() {
-			// restore old text in version field after a while.
-			$status.text(oldStatusText)
-		}, 2000)
-	})
-
+	// append clickable version footer and callback in desktop notification when update is available.
+	// callback => startDownload()
 	updater.on('updateAvailable', function(options) {
 		var showText = 'Cryptocat ' + options.remoteVersion + ' is available. Click to download!'
 
@@ -193,6 +185,8 @@
 
 	})
 
+	// append clickable version footer and callback in desktop notification on download + verification finished.
+	// callback => startInstall()
 	updater.on('downloadedUpdate', function(options) {
 		var showText = 'Cryptocat ' + options.remoteVersion + ' was downloaded. Click to install!'
 
@@ -213,8 +207,41 @@
 
 	})
 
+	// quit app on preinstallation finished (after startInstall)
+	updater.on('preInstallationFinished', function() {
+		console.log('preInstallationFinished')
+		$status.text('Update finished, restarting...')
+
+		gui.App.quit() // exit the app (a newer instance restarts from tmp)
+	})
+
+	// execute postInstall after update is finished (but app currently running in tmp)
+	updater.on('updateFinished', function(options) {
+		console.log('updateFinished')
+
+		options.execute(gui) // open new app and exit old from tmp!
+	})
+
+
+	// !!!
+	// ALL following listeners only change the status text in the ui
+	// !!!
+
+	updater.on('noUpdateAvailable', function(options) {
+		console.log('noUpdateAvailable')
+		$status.text(options.remoteVersion + ' is the latest version.')
+
+		setTimeout(function() {
+			$status.text(oldStatusText) // restore old text in version field after a while.
+		}, 2000)
+	})
+
+	updater.on('checkingForUpdate', function() {
+		console.log('checkingForUpdate')
+		$status.text('Checking for updates...')
+	})
+
 	updater.on('downloadProgress', function(options) {
-		// console.log('downloadProgress')
 		$status.text('Downloading Cryptocat ' + options.remoteVersion + ' (' + options.percentage + '%' + ')')
 	})
 
@@ -233,18 +260,6 @@
 		$status.text('Cryptocat is installing...')
 	})
 
-	updater.on('preInstallationFinished', function() {
-		console.log('preInstallationFinished')
-		$status.text('Update finished, restarting...')
-
-		gui.App.quit() // exit the app (a newer instance restarts from tmp)
-	})
-
-	updater.on('updateFinished', function(options) {
-		console.log('updateFinished')
-
-		options.execute(gui) // open new app and exit old from tmp!
-	})
 
 	// ---------------------------------------------------------------------------
 	// Startup Client View
@@ -275,7 +290,6 @@
 		$(STATUS_CSS_STYLE).appendTo('head')
 
 		// init updater and start auto-update process!
-
 		updater.init(gui.App.argv)
 
 	})
