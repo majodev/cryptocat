@@ -98,4 +98,15 @@ I've only tested the update procedure with mac and windows "fake" versions.
 Same as `grunt make` but sets version to `2.2.1-fake`
 
 ## Test signature verification before hosting
-After `make node-webkit` OR `grunt make` OR `grunt makeFake` you can test all appended DSA signatures (inside your the local hostable `package.json`) against your public key (in `dsa/`) and the bundled files in `PROJECT_ROOT/release/` by running `mocha` (if globally installed) or `npm test` (cwd is THIS dir).
+After `make node-webkit` OR `grunt make` OR `grunt makeFake` you can test all appended DSA signatures (inside the local hostable `package.json`) against your public key (in `dsa/`) and the bundled files in `PROJECT_ROOT/release/` by running `mocha` (if globally installed) or `npm test` (cwd is THIS dir).
+
+Sample Output:
+```bash
+node-webkit $ mocha
+  verifySignature
+    ✓ validates mac DSA: MCwCFE0vrql8LPUQXNfB3OO4JE1ohJ21AhR3yW2uB96jgR16mkEVcaUV3/exlw== (206ms)
+    ✓ validates win DSA: MCwCFB6mRjSBFUXSeZ6Zwp9OzYEKR9ESAhQYlFKQnCPy55kdBbWgY80utz8asw== (159ms)
+    ✓ validates linux32 dsa: MC0CFQCVnpAqhW3B429CBAePVqj29/3OSQIUN6ADe3d48dLvbCz8Aneje5JxPu0= (237ms)
+    ✓ validates linux64 dsa: MC0CFQCaRFRR2PLkIfpjwc2YrOfV/619MgIUDm06HtjM1n2HREDiTx9Ae0bvONc= (188ms)
+  4 passing (797ms)
+```

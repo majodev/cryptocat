@@ -9,56 +9,32 @@ var basename = require('path').basename
 
 describe('verifySignature', function() {
 
-  // it('mac: dsa sig validates against dsa_pub and file sha1', function (done) {
-  //   var val = verifySignature.verifyFileSignature(RELEASE_DIR + basename(pkg.packages.mac.url), pkg.packages.mac.dsa)
-  //   expect(val).to.be.equal(true)
-  //   done()
-  // })
-
-  // it('win: dsa sig validates against dsa_pub and file sha1', function (done) {
-  //   var val = verifySignature.verifyFileSignature(RELEASE_DIR + basename(pkg.packages.win.url), pkg.packages.win.dsa)
-  //   expect(val).to.be.equal(true)
-  //   done()
-  // })
-
-  // it('linux32: dsa sig validates against dsa_pub and file sha1', function (done) {
-  //   var val = verifySignature.verifyFileSignature(RELEASE_DIR + basename(pkg.packages.linux32.url), pkg.packages.linux32.dsa)
-  //   expect(val).to.be.equal(true)
-  //   done()
-  // })
-
-  // it('linux64: dsa sig validates against dsa_pub and file sha1', function (done) {
-  //   var val = verifySignature.verifyFileSignature(RELEASE_DIR + basename(pkg.packages.linux64.url), pkg.packages.linux64.dsa)
-  //   expect(val).to.be.equal(true)
-  //   done()
-  // })
-
-  it('mac (async): dsa sig validates against dsa_pub and file sha1', function (done) {
+  it('validates mac DSA: ' + pkg.packages.mac.dsa, function (done) {
     verifySignature.verifyFileSignatureAsync(RELEASE_DIR + basename(pkg.packages.mac.url), pkg.packages.mac.dsa, function (val) {
       expect(val).to.be.equal(true)
+      done()
     })
-    done()
   })
 
-  it('win (async): dsa sig validates against dsa_pub and file sha1', function (done) {
+  it('validates win DSA: ' + pkg.packages.win.dsa, function (done) {
     verifySignature.verifyFileSignatureAsync(RELEASE_DIR + basename(pkg.packages.win.url), pkg.packages.win.dsa, function (val) {
       expect(val).to.be.equal(true)
+      done()
     })
-    done()
   })
 
-  it('linux32 (async): dsa sig validates against dsa_pub and file sha1', function (done) {
+  it('validates linux32 dsa: ' + pkg.packages.linux32.dsa, function (done) {
     verifySignature.verifyFileSignatureAsync(RELEASE_DIR + basename(pkg.packages.linux32.url), pkg.packages.linux32.dsa, function (val) {
       expect(val).to.be.equal(true)
+      done()
     })
-    done()
   })
 
-  it('linux64 (async): dsa sig validates against dsa_pub and file sha1', function (done) {
+  it('validates linux64 dsa: ' + pkg.packages.linux64.dsa, function (done) {
     verifySignature.verifyFileSignatureAsync(RELEASE_DIR + basename(pkg.packages.linux64.url), pkg.packages.linux64.dsa, function (val) {
       expect(val).to.be.equal(true)
+      done()
     })
-    done()
   })
 
 })
