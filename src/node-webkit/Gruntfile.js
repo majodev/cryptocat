@@ -129,7 +129,12 @@ module.exports = function(grunt) {
 				cacheDir: DIRS.CACHE,
 				macIcns: DIRS.NWASSETS + 'Cryptocat.icns',
 				winIco: DIRS.NWASSETS + 'logo.ico',
-				version: 'v0.11.0'
+				version: 'v0.11.0',
+				macPlist: { // Pass an object to overwrite or add properties to the generated plist file.
+					CFBundleIdentifier: 'com.cryptocat.cryptocat-nw', // important id for osx desktop notifications
+					NSHumanReadableCopyright: 'Copyright © ' + new Date().getFullYear() + ' Cryptocat. All rights reserved.',
+					LSApplicationCategoryType: 'public.app-category.social-networking'
+				}
 			},
 			src: DIRS.BUILD + '**/**' // src needs grunt glob pattern 
 		},

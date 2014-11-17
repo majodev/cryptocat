@@ -62,7 +62,7 @@ function notify(options) {
 		contentImage: path.join(__dirname, pkg.window.icon),
 		sound: false, // Only Notification Center or Windows Toasters
 		wait: notifyCallbackAllowed, // wait with callback until user action is taken on notification
-		sender: 'com.intel.nw' // mac only, set sender (TODO, change id in plist) https://github.com/alloy/terminal-notifier#options
+		sender: 'com.cryptocat.cryptocat-nw' // mac only, app bundle-id in Info.plist https://github.com/alloy/terminal-notifier#options
 	}, function(err, response) {
 		// catch, these are general errors on response Timeout and Activate. 
 		// They are not bad and should not be file-logged. Hence exclude this...
