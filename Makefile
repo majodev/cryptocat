@@ -73,7 +73,13 @@ lint:
 		src/core/chrome.js \
 		test/testBase.js \
 		test/core/js/*.js \
-		Gruntfile.js
+		Gruntfile.js \
+		src/node-webkit/Gruntfile.js \
+		src/node-webkit/mainInjectEnd.js \
+		src/node-webkit/mainInjectStart.js \
+		src/node-webkit/mainNode.js \
+		src/node-webkit/test/*.js \
+		src/node-webkit/lib/*.js
 	@/bin/echo ""
 
 vendor=src/core/js/lib
