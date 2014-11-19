@@ -54,59 +54,67 @@ The `package.json` file in these binaries has been modified to the version `2.2.
 Well, it's an early prototype (**but it should work, please leave feedback!**)....  
 I've only tested the update procedure with mac and windows "fake" versions.
 
-## Thoughts and usage
+## Keypoints
 - Press `Ctrl+Shift+J` (OS X: `CMD+Shift+J`) to open developer tools within running app.
-- I ~~don't want to modify~~ **want to minimize modifications to any files outside of the `node-webkit`-folder**, as this should be a target specific contribution.
-	- Currently only modified `cryptocat.js` to force usage of `.ogg` within node-webkit and provide a native bridge to desktop-notifications
-	- It should be no problem to leave the other files alone, all js injections can be done via node-webkit's [inject-js-start and inject.js-end](https://github.com/rogerwang/node-webkit/wiki/Manifest-format#inject-js-start--inject-js-end), see [mainInjectEnd.js](mainInjectEnd.js) and [mainInjectStart.js](mainInjectStart.js)
-- The local `package.json` within this folder **gets automatically updated** (with values from the root `package.json`) via the local grunt task, in order to make releases as easy as possible
-	- ~~Is it a better idea to provide a separate `update-manifest.json` file and don't use update-logic with the local `package.json` (+ don't update it automatically based on the root `package.json` file)?~~ Nope, doubles the work.~~
-- **Make deploys easy**
+- **Minimize modifications** to any files outside of the `node-webkit`-folder, as this should be a target specific contribution.
+	- Modified `core/js/cryptocat.js` to force usage of `.ogg` within node-webkit and provide a native bridge to desktop-notifications
+	- Modified `core/js/etc/facebook.js` to allow authentication through external browser window
+	- Most js injections can be done via node-webkit's [inject-js-start and inject.js-end](https://github.com/rogerwang/node-webkit/wiki/Manifest-format#inject-js-start--inject-js-end), see [mainInjectEnd.js](mainInjectEnd.js) and [mainInjectStart.js](mainInjectStart.js)
+- **Make deploys as easy as possible**
 	- Use some grunt magic (see [Gruntfile.js](Gruntfile.js))!
-	- Constant remote path where the most up-to-date versions of Cryptocat will live, the urls to the newer versions in the remote `package.json` need to be automatically updated in the local `package.json` (se `REMOTE_UPDATE_DIR` in the [Gruntfile.js](Gruntfile.js))
+	- The local [`package.json`](package.json) within this folder:
+		- gets automatically updated (with values from the project's root `package.json`)
+		- Provides an update manifest for new versions of Cryptocat.
+		- Set a constant remote path where the most up-to-date versions of Cryptocat will live
+		- The urls to newer Cryptocat version (the "update manifest") gets automatically inserted into the `package.json` (see `REMOTE_UPDATE_DIR` in the [Gruntfile.js](Gruntfile.js))
 	- Version prefixes will be automatically added to the zipped release file for each platform e.g. `Cryptocat_linux32_v2.2.2.tar.gz` (quite limited yet, I feel the Crytocat team definitely wants to use GitHub releases (I still need to add version folder prefixes))
-	- Signing the updates takes place automatically and signature is appended to `package.json`'s update manifest data. For more information [see `dsa/README.md`](dsa/README.md)
+	- Signing the updates takes place automatically and signature are appended to `package.json`'s update manifest data. For more information [see `dsa/README.md`](dsa/README.md)
 
+## Building Cryptocat node-webkit binaries
+Run **`make node-webkit`** while **your cwd is the project's root folder**. This will trigger: 
+1. `npm install -d` within `src/node-webkit/` to install all development dependencies
+2. the `grunt make` task as defined in the next section
 
-## How to build:
-- Run `make node-webkit` (while your cwd is the project's root folder)
-	- This will trigger the `grunt make` task as as defined in the next section
-	- Creates a `tmp` folder (@project's root dir) to cache node-webkit's runtime and nw app builds
-	- Creates `release` folder (@project's root dir) holds the platform release versions, zipped and ready to be hosted
-- To build the windows version on mac/linux use'll need to install [wine](https://www.winehq.org/) (must be available in your `PATH`) to inject the proper `.ico` into the `.exe`! See [this issue](https://github.com/mllrsohn/node-webkit-builder/issues/19).
+**Important: ** To bundle the windows version on mac/linux use'll need to install [wine](https://www.winehq.org/) (must be available in your `PATH`) to inject the proper `.ico` into the `.exe`! See [this issue](https://github.com/mllrsohn/node-webkit-builder/issues/19).
 
+### Created Folders
+- `tmp` folder (@project's root dir) to cache node-webkit's runtime and nw app builds
+- `release` folder (@project's root dir) holds the platform release versions, zipped and ready to be hosted
 
-## Grunt
-### `grunt make`
-- Uses the minor grunt tasks 1. `grunt build` and 2. `grunt release` (and some folder cleaning before)
+### Grunt tasks
+This section explains `grunt make` process, which can be triggered by `make node-webkit` at the project's root directory.
 
-#### `grunt build`
+### Main task: `grunt make`
+Runs `grunt build`, then `grunt release` in sequence.
+
+#### Minor task: `grunt build`
 1. `update_json`: Update the local `package.json` in this folder with values from the root `package.json`
-	- ALSO updates the `packages>url`-fields for (needed in a update manifest) of each platform to e.g. `"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_mac_v2.2.2.zip"`. Remote folder prefix (in which folder are the release files hosted) must be set via `REMOTE_UPDATE_DIR` constant in the gruntfile 
 2. `copy`: Copy core and platform files to `ROOT_PROJECT_FOLDER/tmp/node-webkit-build`
 
-**Intermediate step while developing**: Now you are able to run `nw .` within `ROOT_PROJECT_FOLDER/tmp/node-webkit-build` without packaging the app for each platforms (`nw` must point to a node-webkit install in your `PATH` variable)
+#### Heads up! Here's a nice intermediate step while developing!
+Now you are able to run `nw .` within `ROOT_PROJECT_FOLDER/tmp/node-webkit-build` without packaging the app for each platforms (`nw` must point to a node-webkit install in your `PATH` variable). If you also want to watch changes while developing and retrigger `grunt build` automatically, the `grunt dev` task become handy!
 
-#### `grunt release`
+#### Minor task: `grunt release`
 1. `nodewebkit`: package all files in `ROOT_PROJECT_FOLDER/tmp/node-webkit-build` with node-webkit for each platform (cached node-webkit runtime in `ROOT_PROJECT_FOLDER/tmp/node-webkit-cache`) to `ROOT_PROJECT_FOLDER/release/`
 2. `bundle`: Compresses app to `.zip`
 3. `sign`: generate DSA signature
 4. `update_json:hosting` : update to a hostable `package.json` that includes all update-manifest information.
-5. `clean:releasesNotZipped`: remove non zipped release files 
+5. `clean:releasesNotZipped`: remove non zipped release files
+6. `mochaTest:dsaSignaturesTest`: Test signature verification: generated DSA keys are validated against `.zips` and public key in `dsa`. Further information, see [Test signature verification before hosting](#test-signature-verification-before-hosting).
 
-### `grunt makeFake`
-Same as `grunt make` but sets version to `2.2.1-fake`
+### Main task: `grunt makeFake`
+Same as `grunt make` but sets version to `2.2.1-fake` to generate binaries for auto-update-testing.
 
-## Test signature verification before hosting
-After `make node-webkit` OR `grunt make` OR `grunt makeFake` you can test all appended DSA signatures (inside the local hostable `package.json`) against your public key (in `dsa/`) and the bundled files in `PROJECT_ROOT/release/` by running `mocha` (if globally installed) or `npm test` (cwd is THIS dir).
+### Test signature verification before hosting
+After `make node-webkit` OR `grunt make` OR `grunt makeFake` you can test all appended DSA signatures (inside the local hostable `package.json`) against your public key (in `dsa/`) and the bundled files in `PROJECT_ROOT/release/` by running `mocha` (if globally installed) or `npm test` (cwd is THIS dir). This is the same step, that is automatically executed as the last step in `grunt release`.
 
 Sample Output:
 ```bash
 node-webkit $ mocha
-  verifySignature
-    ✓ validates mac DSA: MCwCFE0vrql8LPUQXNfB3OO4JE1ohJ21AhR3yW2uB96jgR16mkEVcaUV3/exlw== (206ms)
-    ✓ validates win DSA: MCwCFB6mRjSBFUXSeZ6Zwp9OzYEKR9ESAhQYlFKQnCPy55kdBbWgY80utz8asw== (159ms)
-    ✓ validates linux32 dsa: MC0CFQCVnpAqhW3B429CBAePVqj29/3OSQIUN6ADe3d48dLvbCz8Aneje5JxPu0= (237ms)
-    ✓ validates linux64 dsa: MC0CFQCaRFRR2PLkIfpjwc2YrOfV/619MgIUDm06HtjM1n2HREDiTx9Ae0bvONc= (188ms)
-  4 passing (797ms)
+	verifySignature
+		✓ validates mac DSA: MCwCFE0vrql8LPUQXNfB3OO4JE1ohJ21AhR3yW2uB96jgR16mkEVcaUV3/exlw== (206ms)
+		✓ validates win DSA: MCwCFB6mRjSBFUXSeZ6Zwp9OzYEKR9ESAhQYlFKQnCPy55kdBbWgY80utz8asw== (159ms)
+		✓ validates linux32 dsa: MC0CFQCVnpAqhW3B429CBAePVqj29/3OSQIUN6ADe3d48dLvbCz8Aneje5JxPu0= (237ms)
+		✓ validates linux64 dsa: MC0CFQCaRFRR2PLkIfpjwc2YrOfV/619MgIUDm06HtjM1n2HREDiTx9Ae0bvONc= (188ms)
+	4 passing (797ms)
 ```

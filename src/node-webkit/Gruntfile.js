@@ -102,7 +102,7 @@ module.exports = function(grunt) {
 				src: ['*.*', '!Gruntfile.js', '!README.md',
 					DIRS.NWASSETS + '*.*',
 					'lib/**/*.*',
-					'node_modules/node-webkit-updater/**/**', 
+					'node_modules/node-webkit-updater/**/**',
 					'node_modules/node-notifier/**/**',
 					'dsa/dsa_pub.pem'
 				],
@@ -146,7 +146,7 @@ module.exports = function(grunt) {
 			'srcChanges': { // only watch local files in node-webkit
 				files: [DIRS.LOCAL + '**/*.*', '!' + DIRS.LOCAL + 'node_modules/**/*.*'],
 				//files: [DIRS.CORE + '**/*.*', DIRS.LOCAL + '**/*.*'],
-				tasks: ['clean:dsaWhileWatch','build']
+				tasks: ['clean:dsaWhileWatch', 'build']
 			}
 		},
 
@@ -243,6 +243,15 @@ module.exports = function(grunt) {
 					}
 				}
 			}
+		},
+
+		mochaTest: {
+			dsaSignaturesTest: {
+				options: {
+					reporter: 'spec'
+				},
+				src: ['test/signing.js']
+			}
 		}
 
 	})
@@ -254,7 +263,8 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-clean')
 	grunt.loadNpmTasks('grunt-contrib-watch')
 	grunt.loadNpmTasks('grunt-contrib-compress')
-	grunt.loadNpmTasks('grunt-shell') 
+	grunt.loadNpmTasks('grunt-shell')
+	grunt.loadNpmTasks('grunt-mocha-test')
 
 	// This default task performs all needed steps to release apps with nodewebkit
 	grunt.registerTask('default', ['make'])
@@ -264,14 +274,16 @@ module.exports = function(grunt) {
 	grunt.registerTask('makeFake', ['clean:build', 'buildFake', 'release'])
 
 	// build task that need to be performed before the nodewebkit task 
-	
+
 	grunt.registerTask('build', ['update_json:local', 'copy'])
 
 	// same as above BUT change version to 2.2.1 to output a fake release
 	grunt.registerTask('buildFake', ['update_json:fake', 'copy'])
 
 	// release full node-webkit version for all defined platforms (requires build before)
-	grunt.registerTask('release', ['nodewebkit', 'bundle', 'sign', 'update_json:hosting', 'clean:releasesNotZipped'])
+	grunt.registerTask('release', ['nodewebkit', 'bundle', 'sign',
+		'update_json:hosting', 'clean:releasesNotZipped', 'mochaTest:dsaSignaturesTest'
+	])
 
 	// trigger build and watch task
 	// useful to execute only if you are within the DIR.BUILD directory and 
