@@ -43,7 +43,7 @@
 			notify({
 				title: options.title,
 				message: options.body,
-				callback: focusMainWindow
+				callback: bringWindowToFront
 			})
 		}
 	}
@@ -64,16 +64,16 @@
 
 	coreWindow.on('focus', function() {
 		windowIsFocused = true
-		coreWindow.setAlwaysOnTop(false)
 
 		// if available, focus the message text input
 		$('#userInputText').focus()
 	})
 
-	function focusMainWindow() {
-		console.log('focusMainWindow')
-		// hacky solution, bring window to top but reset to false when window gets focused
-		coreWindow.setAlwaysOnTop(true)
+	function bringWindowToFront() {
+		// try to bring the window to the front...
+		coreWindow.restore()
+		coreWindow.show(true)
+		coreWindow.focus()
 	}
 
 	// ---------------------------------------------------------------------------
@@ -134,7 +134,7 @@
 
 	// Tell lib/updater.js to download update + update UI
 	function startDownload() {
-		focusMainWindow()
+		bringWindowToFront()
 		undoStatusClickable()
 		updater.downloadUpdate()
 		$status.text('Downloading ' + updater.getSavedRemoteVersion() + ' (' + 0 + '%' + ')')
@@ -142,7 +142,7 @@
 
 	// Tell lib/updater.js to install update + update UI
 	function startInstall() {
-		focusMainWindow()
+		bringWindowToFront()
 		undoStatusClickable()
 		updater.installUpdate()
 		$status.text('Unpacking ' + updater.getSavedRemoteVersion() + ' ...')

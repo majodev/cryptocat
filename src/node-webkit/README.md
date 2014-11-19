@@ -13,7 +13,7 @@
 ![Cryptocat win auto-update gif](http://i.giphy.com/yoJC2rfqFbOMnvwRpe.gif)
 
 ####Linux32 (untested) / Linux64 (working): 
-Linux64 builds work, **please provide feedback for linux32!**
+Linux64 build works, **please provide feedback for linux32!**
 
 ## Roadmap
 * [✓] Perform platform builds into `/release` via automated grunt task.
