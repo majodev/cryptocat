@@ -1,12 +1,6 @@
 ![Cryptocat](https://raw.github.com/cryptocat/cryptocat/master/src/core/img/icon-128.png)  
 [![Build Status](https://secure.travis-ci.org/cryptocat/cryptocat.png?branch=master)](http://travis-ci.org/cryptocat/cryptocat)  
 
-# THIS IS AN UNOFFICIAL FORK of CRYPTOCAT! BE CAREFUL!
-> An attempt to build Cryptocat desktop apps for all platforms by bundling them via [node-webkit](https://github.com/rogerwang/node-webkit) and utilizing [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater) for auto-updating.
-
-# **[WIP! see `src/node-webkit`](src/node-webkit)**
-
-
 ###Browser-based app for easy to use, accessible encrypted chat.
 Cryptocat is an experimental browser-based chat client for easy to use, encrypted conversations. It aims to make encrypted, private chat easy to use and accessible. We want to break down the barrier that prevents the general public from having an accessible privacy alternative that they already know how to use. Cryptocat is currently available for Chrome, Firefox, Safari, Opera, OS X and iPhone. It uses the [OTR](http://www.cypherpunks.ca/otr/) protocol over XMPP for encrypted two-party chat and the (upcoming) mpOTR protocol for encrypted multi-party chat.
 
@@ -33,6 +27,9 @@ Also available from [Cryptocat](https://crypto.cat/get/cryptocat.safariextz).
 ### Apple Mac OS X
 Run `make mac` to build as a standalone Mac application. (After running `make mac`, you can also `open src/mac/Cryptocat.xcodeproj` to edit & build the project in Xcode normally.)  Building the Mac version requires [HomeBrew](http://brew.sh) to be installed to fetch a Tor dependency on `libevent` and `openssl`.
 Also available from the [Mac App Store](https://itunes.apple.com/app/cryptocat/id613116229?mt=12).
+
+### node-webkit
+Run `make node-webkit` to build standalone apps for Windows, Mac OS X, Linux32 and Linux64. Auto-update information get automatically appended and is hosted at [`src/node-webkit/package.json`](src/node-webkit/package.json). Further information is available in [`src/node-webkit`](src/node-webkit). 
 
 ##Goals
 * XMPP **[DONE]** | [Discussion](https://github.com/cryptocat/cryptocat/issues/83), [Library](http://strophe.im)
