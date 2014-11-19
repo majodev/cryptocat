@@ -31,12 +31,12 @@
 	var windowIsFocused = false
 
 	// ---------------------------------------------------------------------------
-	// Attach to global NW_DESKTOP_APP object: Desktop notifications bridge
+	// Attaching to global NW_DESKTOP_APP object
 	// ---------------------------------------------------------------------------
 
+	// Desktop notifications bridge
 	// options: {image, title, body, timeout}
 	window.NW_DESKTOP_APP.desktopNotification = function desktopNotification(options) {
-
 		// only do desktop notifications if the window is not focused
 		// if user click the notification it, it will get focused via callback
 		if (windowIsFocused === false) {
@@ -47,6 +47,12 @@
 			})
 		}
 	}
+
+	// Open in external default browser bridge
+	window.NW_DESKTOP_APP.openURLInDefaultBrowser = function openURLInDefaultBrowser(url) {
+		gui.Shell.openExternal(url)
+	}
+
 
 	// ---------------------------------------------------------------------------
 	// desktop window focus listeners and focus function

@@ -252,6 +252,10 @@ $('#facebookConnect').click(function() {
 		if (navigator.userAgent === 'Chrome (Mac app)') {
 			window.open(authURL)
 		}
+		else if (typeof window.NW_DESKTOP_APP === 'object') {
+			// node-webkit desktop app
+			window.NW_DESKTOP_APP.openURLInDefaultBrowser(authURL)
+		}
 		else {
 			window.open(
 				authURL,
