@@ -24,7 +24,7 @@ Linux64 build works, **please provide feedback for linux32!**
 	- [✓] **ENFORCE SECURITY: DSA signing for updates is required!** See [this discussion here](https://github.com/edjafarov/node-webkit-updater/issues/56) then hop into the [dsa folder](dsa/) for further information. Verification is done via [`lib/verifySignature.js`](lib/verifySignature.js)
 * [✓] Essential UI improvements
 	- [✓] Use `.ogg` instead of `.mp3` in node-webkit ([learn why](https://github.com/rogerwang/node-webkit/wiki/Using-MP3-%26-MP4-%28H.264%29-using-the--video--%26--audio--tags.))
-	- [✓] Should auto-update is directly available in the version footer of Cryptocat.
+	- [✓] Auto-update is directly available in the version footer of Cryptocat.
 	- [✗] **Dismissed**: ~~Do we need a tray-icon?~~ **Platform specific, subjective.**
 	- [✓] Desktop chat notifications (e.g. via [node-notifier](https://github.com/mikaelbr/node-notifier)) (tested win/mac)
 * [--] Fix errors ([**without** globally catching all uncaught exceptions](https://github.com/rogerwang/node-webkit/issues/1699))
@@ -75,7 +75,7 @@ Run **`make node-webkit`** while **your cwd is the project's root folder**. This
 1. `npm install -d` within `src/node-webkit/` to install all development dependencies
 2. the `grunt make` task as defined in the next section
 
-**Important: ** To bundle the windows version on mac/linux use'll need to install [wine](https://www.winehq.org/) (must be available in your `PATH`) to inject the proper `.ico` into the `.exe`! See [this issue](https://github.com/mllrsohn/node-webkit-builder/issues/19).
+**Important:** To bundle the windows version on mac/linux use'll need to install [wine](https://www.winehq.org/) (must be available in your `PATH`) to inject the proper `.ico` into the `.exe`! See [this issue](https://github.com/mllrsohn/node-webkit-builder/issues/19).
 
 ### Created Folders
 - `tmp` folder (@project's root dir) to cache node-webkit's runtime and nw app builds
