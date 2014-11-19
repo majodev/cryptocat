@@ -3,11 +3,17 @@
 > Desktop apps utilize [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater) to receive automatic updates.
 
 ## Status
-**Pull request. Trying to merge into master**  
+**Pull request submitted. Trying to merge into master...**  
 [Download prebuild 2.2.1-fake apps here](#let-me-test-this-with-some-prebuild-binaries) to test the auto-update procedure.
 
 ## Contribution keypoints
-- Press `Ctrl+Shift+J` (OS X: `CMD+Shift+J`) to open developer tools within running app.
+- **Auto-update procedure**
+  - Auto-update is directly available in the version footer of Cryptocat.
+	- Fetch a github-hosted remote `package.json` file in a [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater)s' compatible manifest format, download the newer version and execute a self-update procedure.
+- **Secure updates**
+	- Manifest (`package.json`) + releases must be hosted on a SSL enabled server. We will use a raw GitHub urls linking to the local `package.json` and GitHub releases. Both over SSL/https! **Attention:** This connection does not ship [Extended Validation Certifactes](http://en.wikipedia.org/wiki/Extended_Validation_Certificate).
+	- **ENFORCE SECURITY: DSA signing for updates is required!** See [this discussion here](https://github.com/edjafarov/node-webkit-updater/issues/56) then hop into the [dsa folder](dsa/) for further information. Verification is done via [`lib/verifySignature.js`](lib/verifySignature.js)
+- **Native** desktop notifications (e.g. via [node-notifier](https://github.com/mikaelbr/node-notifier)) (tested win/mac)
 - **Minimize modifications** to any files outside of the `node-webkit`-folder, as this should be a target specific contribution.
 	- Modified `core/js/cryptocat.js` to force usage of `.ogg` within node-webkit and provide a native bridge to desktop-notifications
 	- Modified `core/js/etc/facebook.js` to allow authentication through external browser window
@@ -21,6 +27,7 @@
 		- The urls to newer Cryptocat version (the "update manifest") gets automatically inserted into the `package.json` (see `REMOTE_UPDATE_DIR` in the [Gruntfile.js](Gruntfile.js))
 	- Version prefixes will be automatically added to the zipped release file for each platform e.g. `Cryptocat_linux32_v2.2.2.tar.gz` (quite limited yet, I feel the Crytocat team definitely wants to use GitHub releases (I still need to add version folder prefixes))
 	- Signing the updates takes place automatically and signature are appended to `package.json`'s update manifest data. For more information [see `dsa/README.md`](dsa/README.md)
+- Press `Ctrl+Shift+J` (OS X: `CMD+Shift+J`) to open developer tools within running app.
 
 ## Let me **test** this with some prebuild binaries!
 OK, here's are some "v2.2.1-fake"-Cryptocat binaries to test the update procedure:
@@ -86,34 +93,17 @@ After `make node-webkit` OR `grunt make` OR `grunt makeFake` you can test all ap
 Sample Output:
 ```bash
 node-webkit $ mocha
-	verifySignature
-		✓ validates mac DSA: MCwCFE0vrql8LPUQXNfB3OO4JE1ohJ21AhR3yW2uB96jgR16mkEVcaUV3/exlw== (206ms)
-		✓ validates win DSA: MCwCFB6mRjSBFUXSeZ6Zwp9OzYEKR9ESAhQYlFKQnCPy55kdBbWgY80utz8asw== (159ms)
-		✓ validates linux32 dsa: MC0CFQCVnpAqhW3B429CBAePVqj29/3OSQIUN6ADe3d48dLvbCz8Aneje5JxPu0= (237ms)
-		✓ validates linux64 dsa: MC0CFQCaRFRR2PLkIfpjwc2YrOfV/619MgIUDm06HtjM1n2HREDiTx9Ae0bvONc= (188ms)
-	4 passing (797ms)
+  verifySignature
+    ✓ validates mac DSA: MCwCFAxCn0ZnnIzxdG+yMsN8bVd7OA4zAhRxWrjr3UePSW8E63I3nJ3qoh4Qow== (296ms)
+    ✓ validates win DSA: MCwCFGPpA3WbfGGKsgeJfs74CZxHS14/AhRaWh2edeMhMNHJ1ibNXJD4rwAf2w== (201ms)
+    ✓ validates linux32 dsa: MCwCFGUR3nqTYlONQDoiw3y1DJSzy3K3AhRYooSVw4sJ0ByhJUjkEH3wkS95tw== (234ms)
+    ✓ validates linux64 dsa: MCwCFAZnhwZCMgwyYfEeLh6L3stSk4mGAhQoMdoec4723PHljEJbq4iXbDKY0w== (198ms)
+  4 passing (944ms)
 ```
 
-## The old Roadmap
-* [✓] Perform platform builds into `/release` via automated grunt task.
-* [✓] Desktop apps can check if they are running the most up-to-date version of Cryptocat
-	* [✓] Fetch a github-hosted remote `package.json` file in a [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater)s' compatible manifest format, download the newer version and execute a self-update procedure.
-* [✓] Update app on all platforms **securely**
-	- [✓] Manifest (`package.json`) + releases must be hosted on a SSL enabled server. We will use a raw GitHub urls linking to the local `package.json` and GitHub releases. Both over SSL/https! **Attention:** This connection does not ship [Extended Validation Certifactes](http://en.wikipedia.org/wiki/Extended_Validation_Certificate).
-	- [✓] **ENFORCE SECURITY: DSA signing for updates is required!** See [this discussion here](https://github.com/edjafarov/node-webkit-updater/issues/56) then hop into the [dsa folder](dsa/) for further information. Verification is done via [`lib/verifySignature.js`](lib/verifySignature.js)
-* [✓] Essential UI improvements
-	- [✓] Use `.ogg` instead of `.mp3` in node-webkit ([learn why](https://github.com/rogerwang/node-webkit/wiki/Using-MP3-%26-MP4-%28H.264%29-using-the--video--%26--audio--tags.))
-	- [✓] Auto-update is directly available in the version footer of Cryptocat.
-	- [✓] Desktop chat notifications (e.g. via [node-notifier](https://github.com/mikaelbr/node-notifier)) (tested win/mac)
+## Known Bugs
 * [--] Fix errors ([**without** globally catching all uncaught exceptions](https://github.com/rogerwang/node-webkit/issues/1699))
-	- [✓] **Bad**: All errors are currently globally catched and logged to `YOUR_HOMEDIR/cryptocat-node-webkit-errors.log` **This is bad and no productive solution!**
+	- **Temporary solution**: All errors are currently globally catched and logged to `YOUR_HOMEDIR/cryptocat-node-webkit-errors.log`
 	- [--] **Error**: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` **Unsolved, fix needed before global catching can be disabled.**
 	- [--] **Fatal**: Little Snitch may cause crash on block ([see this issue](https://github.com/rogerwang/node-webkit/issues/2585)) **Unsolved FATAL error, app crashes! Revert to a previous version of node-webkit?**
 	- [--] **BUG**: `node-webkit Helper` can have a pretty high CPU usage on long usage. Unresolved, Mac only? ([see this issue](https://github.com/LightTable/LightTable/issues/1088))
-	- [✓] fixed Bug: Copy/Paste does not work ([possible fix](https://github.com/rogerwang/node-webkit/issues/1955))
-	- [✓] fixed Bug: No sounds are currently played, mp3 support needs a library shipped with node-webkit, `.ogg` should be preferred. Fixed by always using `.ogg` when running Cryptocat in node-webkit ([see cryptocat.js line 29](https://github.com/majodev/cryptocat/blob/master/src/core/js/cryptocat.js#L29))
-	- [✓] fixed Bug: Windows app needs to be relaunched after update completed.
-	- [✓] fixed Bug: Update procedure might download a `.zip` that cannot be unzipped.
-* [✗] **Dismissed**: ~~Installation routines~~ **No cross-platform automation possible**, won't fix!
-	- [✗] **Dismissed**: ~~Provide `.dmg` on OS X?~~ `.zip` is enough. 
-	- [✗] **Dismissed**: ~~Provide installer on Windows?~~ `.zip` is enough.
