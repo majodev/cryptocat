@@ -26,25 +26,25 @@
 		"max_height": 610,
 		"resizable": false,
 		"show": false,
-		"icon": "assets/icon-128.png"
+		"icon": "core/img/icon-128.png"
 	},
 	"manifestUrl": "https://raw.githubusercontent.com/majodev/cryptocat/master/src/node-webkit/package.json",
 	"packages": {
 		"mac": {
 			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_mac_v2.2.2.zip",
-			"dsa": "MCwCFE0vrql8LPUQXNfB3OO4JE1ohJ21AhR3yW2uB96jgR16mkEVcaUV3/exlw=="
+			"dsa": "MCwCFAxCn0ZnnIzxdG+yMsN8bVd7OA4zAhRxWrjr3UePSW8E63I3nJ3qoh4Qow=="
 		},
 		"win": {
 			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_win_v2.2.2.zip",
-			"dsa": "MCwCFB6mRjSBFUXSeZ6Zwp9OzYEKR9ESAhQYlFKQnCPy55kdBbWgY80utz8asw=="
+			"dsa": "MCwCFGPpA3WbfGGKsgeJfs74CZxHS14/AhRaWh2edeMhMNHJ1ibNXJD4rwAf2w=="
 		},
 		"linux32": {
 			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux32_v2.2.2.tar.gz",
-			"dsa": "MC0CFQCVnpAqhW3B429CBAePVqj29/3OSQIUN6ADe3d48dLvbCz8Aneje5JxPu0="
+			"dsa": "MCwCFGUR3nqTYlONQDoiw3y1DJSzy3K3AhRYooSVw4sJ0ByhJUjkEH3wkS95tw=="
 		},
 		"linux64": {
 			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux64_v2.2.2.tar.gz",
-			"dsa": "MC0CFQCaRFRR2PLkIfpjwc2YrOfV/619MgIUDm06HtjM1n2HREDiTx9Ae0bvONc="
+			"dsa": "MCwCFAZnhwZCMgwyYfEeLh6L3stSk4mGAhQoMdoec4723PHljEJbq4iXbDKY0w=="
 		}
 	},
 	"dependencies": {
