@@ -82,7 +82,8 @@ Now you are able to run `nw .` within `ROOT_PROJECT_FOLDER/tmp/node-webkit-build
 3. `sign`: generate DSA signature
 4. `update_json:hosting` : update to a hostable `package.json` that includes all update-manifest information.
 5. `clean:releasesNotZipped`: remove non zipped release files
-6. `mochaTest:dsaSignaturesTest`: Test signature verification: generated DSA keys are validated against `.zips` and public key in `dsa`. Further information, see [Test signature verification before hosting](#test-signature-verification-before-hosting).
+6. `wait:pause`: Wait some ms so followup mochaTest does not explode... 
+7. `mochaTest:dsaSignaturesTest`: Test signature verification: generated DSA keys are validated against `.zips` and public key in `dsa`. Further information, see [Test signature verification before hosting](#test-signature-verification-before-hosting).
 
 ### Main task: `grunt makeFake`
 Same as `grunt make` but sets version to `2.2.1-fake` to generate binaries for auto-update-testing.
@@ -102,7 +103,6 @@ node-webkit $ mocha
 ```
 
 ## Known Bugs
-- `mochaTest:dsaSignaturesTest` sometimes "explodes" when running `grunt make`, run these signature tests then manually...
 - **Temporary solution**: All errors are currently globally catched and logged to `YOUR_HOMEDIR/cryptocat-node-webkit-errors.log`
 - [--] **Error**: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` **Unsolved, fix needed before global catching can be disabled.**
 - [--] **Fatal**: Little Snitch may cause crash on block ([see this issue](https://github.com/rogerwang/node-webkit/issues/2585)) **Unsolved FATAL error, app crashes! Revert to a previous version of node-webkit?**

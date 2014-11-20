@@ -28,7 +28,7 @@ var REMOTE_UPDATE_DIR = 'https://dl.dropboxusercontent.com/u/2624630/cryptocat_n
 // This function specifies your pattern for the zipped releases 
 // currently its e.g. 'Cryptocat_mac_v2.2.2.zip'
 function getFilename(dir, platform, version, postfix) {
-	return dir + 'Cryptocat_'+ platform + '_v' + version + '.' + postfix
+	return dir + 'Cryptocat_' + platform + '_v' + version + '.' + postfix
 }
 
 module.exports = function(grunt) {
@@ -253,7 +253,8 @@ module.exports = function(grunt) {
 		mochaTest: {
 			dsaSignaturesTest: {
 				options: {
-					reporter: 'spec'
+					reporter: 'spec',
+					clearRequireCache: true
 				},
 				src: ['test/signing.js']
 			}
@@ -287,7 +288,8 @@ module.exports = function(grunt) {
 
 	// release full node-webkit version for all defined platforms (requires build before)
 	grunt.registerTask('release', ['nodewebkit', 'bundle', 'sign',
-		'update_json:hosting', 'clean:releasesNotZipped', 'mochaTest:dsaSignaturesTest'
+		'update_json:hosting', 'clean:releasesNotZipped',
+		'mochaTest:dsaSignaturesTest'
 	])
 
 	// trigger build and watch task
