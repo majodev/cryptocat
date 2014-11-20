@@ -102,6 +102,10 @@ node-webkit $ mocha
 	4 passing (944ms)
 ```
 
+## Troubleshooting
+- `nodewebkit:src` gets stuck while downloading node-webkit binaries: Try to run `grunt nodewebkit` manually a few times until the download finishes and node-webkit bins are extracted into `tmp/cache`.
+- Wine sucks or doesn't work: Remove `winIco: DIRS.NWASSETS + 'logo.ico',` from the [`Gruntfile.js`](https://github.com/majodev/cryptocat/blob/master/src/node-webkit/Gruntfile.js#L136), then you don't need to install wine! However, it **won't inject the proper icon into Windows builds then**!
+
 ## Known Bugs
 - **Temporary solution**: All errors are currently globally catched and logged to `YOUR_HOMEDIR/cryptocat-node-webkit-errors.log`
 - [--] **Error**: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` **Unsolved, fix needed before global catching can be disabled.**
