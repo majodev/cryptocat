@@ -25,6 +25,12 @@ var DIRS = {
 // Specify the remote url path (add TRAILING SLASH) were the updated desktop binaries will live
 var REMOTE_UPDATE_DIR = 'https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/'
 
+// This function specifies your pattern for the zipped releases 
+// currently its e.g. 'Cryptocat_mac_v2.2.2.zip'
+function getFilename(dir, platform, version, postfix) {
+	return dir + 'Cryptocat_'+ platform + '_v' + version + '.' + postfix
+}
+
 module.exports = function(grunt) {
 	grunt.initConfig({
 
@@ -62,19 +68,19 @@ module.exports = function(grunt) {
 						var rootPkg = require(DIRS.ROOT + 'package.json')
 						return {
 							'mac': {
-								'url': REMOTE_UPDATE_DIR + 'Cryptocat_mac_v' + rootPkg.version + '.zip',
+								'url': getFilename(REMOTE_UPDATE_DIR, 'mac', rootPkg.version, 'zip'),
 								'dsa': grunt.option('DSAMac')
 							},
 							'win': {
-								'url': REMOTE_UPDATE_DIR + 'Cryptocat_win_v' + rootPkg.version + '.zip',
+								'url': getFilename(REMOTE_UPDATE_DIR, 'win', rootPkg.version, 'zip'),
 								'dsa': grunt.option('DSAWin')
 							},
 							'linux32': {
-								'url': REMOTE_UPDATE_DIR + 'Cryptocat_linux32_v' + rootPkg.version + '.tar.gz',
+								'url': getFilename(REMOTE_UPDATE_DIR, 'linux32', rootPkg.version, 'tar.gz'),
 								'dsa': grunt.option('DSALinux32')
 							},
 							'linux64': {
-								'url': REMOTE_UPDATE_DIR + 'Cryptocat_linux64_v' + rootPkg.version + '.tar.gz',
+								'url': getFilename(REMOTE_UPDATE_DIR, 'linux64', rootPkg.version, 'tar.gz'),
 								'dsa': grunt.option('DSALinux64')
 							}
 						}
@@ -157,7 +163,7 @@ module.exports = function(grunt) {
 			},
 			'mac': {
 				options: {
-					archive: DIRS.RELEASE + 'Cryptocat_mac_v<%=grunt.option("pkg").version%>.zip',
+					archive: getFilename(DIRS.RELEASE, 'mac', grunt.option('pkg').version, 'zip'),
 					mode: 'zip'
 				},
 				files: [{
@@ -168,7 +174,7 @@ module.exports = function(grunt) {
 			},
 			'win': {
 				options: {
-					archive: DIRS.RELEASE + 'Cryptocat_win_v<%=grunt.option("pkg").version%>.zip',
+					archive: getFilename(DIRS.RELEASE, 'win', grunt.option('pkg').version, 'zip'),
 					mode: 'zip'
 				},
 				files: [{
@@ -179,7 +185,7 @@ module.exports = function(grunt) {
 			},
 			'linux32': {
 				options: {
-					archive: DIRS.RELEASE + 'Cryptocat_linux32_v<%=grunt.option("pkg").version%>.tar.gz',
+					archive: getFilename(DIRS.RELEASE, 'linux32', grunt.option('pkg').version, 'tar.gz'),
 					mode: 'tgz'
 				},
 				files: [{
@@ -191,7 +197,7 @@ module.exports = function(grunt) {
 			},
 			'linux64': {
 				options: {
-					archive: DIRS.RELEASE + 'Cryptocat_linux64_v<%=grunt.option("pkg").version%>.tar.gz',
+					archive: getFilename(DIRS.RELEASE, 'linux64', grunt.option('pkg').version, 'tar.gz'),
 					mode: 'tgz'
 				},
 				files: [{
@@ -208,7 +214,7 @@ module.exports = function(grunt) {
 				stderr: true
 			},
 			'sign_mac': {
-				command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_mac_v<%=grunt.option("pkg").version%>.zip' + ' dsa/dsa_priv.pem',
+				command: './dsa/sign_update.sh ' + getFilename(DIRS.RELEASE, 'mac', grunt.option('pkg').version, 'zip') + ' dsa/dsa_priv.pem',
 				options: {
 					callback: function setDSAMac(err, stdout, stderr, cb) {
 						grunt.option('DSAMac', stdout.trim())
@@ -217,7 +223,7 @@ module.exports = function(grunt) {
 				}
 			},
 			'sign_win': {
-				command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_win_v<%=grunt.option("pkg").version%>.zip' + ' dsa/dsa_priv.pem',
+				command: './dsa/sign_update.sh ' + getFilename(DIRS.RELEASE, 'win', grunt.option('pkg').version, 'zip') + ' dsa/dsa_priv.pem',
 				options: {
 					callback: function setDSAMac(err, stdout, stderr, cb) {
 						grunt.option('DSAWin', stdout.trim())
@@ -226,7 +232,7 @@ module.exports = function(grunt) {
 				}
 			},
 			'sign_linux32': {
-				command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_linux32_v<%=grunt.option("pkg").version%>.tar.gz' + ' dsa/dsa_priv.pem',
+				command: './dsa/sign_update.sh ' + getFilename(DIRS.RELEASE, 'linux32', grunt.option('pkg').version, 'tar.gz') + ' dsa/dsa_priv.pem',
 				options: {
 					callback: function setDSAMac(err, stdout, stderr, cb) {
 						grunt.option('DSALinux32', stdout.trim())
@@ -235,7 +241,7 @@ module.exports = function(grunt) {
 				}
 			},
 			'sign_linux64': {
-				command: './dsa/sign_update.sh ' + DIRS.RELEASE + 'Cryptocat_linux64_v<%=grunt.option("pkg").version%>.tar.gz' + ' dsa/dsa_priv.pem',
+				command: './dsa/sign_update.sh ' + getFilename(DIRS.RELEASE, 'linux64', grunt.option('pkg').version, 'tar.gz') + ' dsa/dsa_priv.pem',
 				options: {
 					callback: function setDSAMac(err, stdout, stderr, cb) {
 						grunt.option('DSALinux64', stdout.trim())
