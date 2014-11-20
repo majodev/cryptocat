@@ -8,7 +8,7 @@
 
 ## Contribution keypoints
 - **Auto-update procedure**
-  - Auto-update is directly available in the version footer of Cryptocat.
+	- Auto-update is directly available in the version footer of Cryptocat.
 	- Fetch a github-hosted remote `package.json` file in a [node-webkit-updater](https://github.com/edjafarov/node-webkit-updater)s' compatible manifest format, download the newer version and execute a self-update procedure.
 - **Secure updates**
 	- Manifest (`package.json`) + releases must be hosted on a SSL enabled server. We will use a raw GitHub urls linking to the local `package.json` and GitHub releases. Both over SSL/https! **Attention:** This connection does not ship [Extended Validation Certifactes](http://en.wikipedia.org/wiki/Extended_Validation_Certificate).
@@ -94,12 +94,12 @@ After `make node-webkit` OR `grunt make` OR `grunt makeFake` you can test all ap
 Sample Output:
 ```bash
 node-webkit $ mocha
-  verifySignature
-    ✓ validates mac DSA: MCwCFAxCn0ZnnIzxdG+yMsN8bVd7OA4zAhRxWrjr3UePSW8E63I3nJ3qoh4Qow== (296ms)
-    ✓ validates win DSA: MCwCFGPpA3WbfGGKsgeJfs74CZxHS14/AhRaWh2edeMhMNHJ1ibNXJD4rwAf2w== (201ms)
-    ✓ validates linux32 dsa: MCwCFGUR3nqTYlONQDoiw3y1DJSzy3K3AhRYooSVw4sJ0ByhJUjkEH3wkS95tw== (234ms)
-    ✓ validates linux64 dsa: MCwCFAZnhwZCMgwyYfEeLh6L3stSk4mGAhQoMdoec4723PHljEJbq4iXbDKY0w== (198ms)
-  4 passing (944ms)
+	verifySignature
+		✓ validates mac DSA: MCwCFAxCn0ZnnIzxdG+yMsN8bVd7OA4zAhRxWrjr3UePSW8E63I3nJ3qoh4Qow== (296ms)
+		✓ validates win DSA: MCwCFGPpA3WbfGGKsgeJfs74CZxHS14/AhRaWh2edeMhMNHJ1ibNXJD4rwAf2w== (201ms)
+		✓ validates linux32 dsa: MCwCFGUR3nqTYlONQDoiw3y1DJSzy3K3AhRYooSVw4sJ0ByhJUjkEH3wkS95tw== (234ms)
+		✓ validates linux64 dsa: MCwCFAZnhwZCMgwyYfEeLh6L3stSk4mGAhQoMdoec4723PHljEJbq4iXbDKY0w== (198ms)
+	4 passing (944ms)
 ```
 
 ## Known Bugs

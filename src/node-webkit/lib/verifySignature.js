@@ -29,26 +29,26 @@ var pubkey = fs.readFileSync(path.join(__dirname, '../dsa/dsa_pub.pem')).toStrin
 // }
 
 function createDigestAsync(filePath, callback) {
-  var hash = crypto.createHash(HASH_ALGORITHM)
-  var rs = fs.ReadStream(filePath)
+	var hash = crypto.createHash(HASH_ALGORITHM)
+	var rs = fs.ReadStream(filePath)
 
-  rs.on('data', function(d) {
-    hash.update(d)
-  })
+	rs.on('data', function(d) {
+		hash.update(d)
+	})
 
-  rs.on('end', function() {
-    callback(null, hash.digest())
-  })
+	rs.on('end', function() {
+		callback(null, hash.digest())
+	})
 
-  rs.on('error', function(e) {
-    callback(e)
-  })
+	rs.on('error', function(e) {
+		callback(e)
+	})
 }
 
 function verifySignature(digest, dsaSignature) {
-  var verifier = crypto.createVerify(VERIFY_ALGORITHM)
-  verifier.update(digest)
-  return verifier.verify(pubkey, dsaSignature, 'base64')
+	var verifier = crypto.createVerify(VERIFY_ALGORITHM)
+	verifier.update(digest)
+	return verifier.verify(pubkey, dsaSignature, 'base64')
 }
 
 
@@ -57,18 +57,18 @@ function verifySignature(digest, dsaSignature) {
 // }
 
 function verifyFileSignatureAsync(filePath, dsaSignature, callback) {
-  createDigestAsync(filePath, function(error, digest) {
-    if (error) {
-      throw error
-      return
-    }
+	createDigestAsync(filePath, function(error, digest) {
+		if (error) {
+			throw error
+			return
+		}
 
-    callback(verifySignature(digest, dsaSignature))
-  })
+		callback(verifySignature(digest, dsaSignature))
+	})
 }
 
 // public
 module.exports = {
-  // verifyFileSignature: verifyFileSignature,
-  verifyFileSignatureAsync: verifyFileSignatureAsync
+	// verifyFileSignature: verifyFileSignature,
+	verifyFileSignatureAsync: verifyFileSignatureAsync
 }
