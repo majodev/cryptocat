@@ -33,7 +33,7 @@
 OK, here's are some "v2.2.1-fake"-Cryptocat binaries to test the update procedure:
 - [win](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_win_v2.2.1-fake.zip) (Windows 8.1 tested)
 - [mac](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_mac_v2.2.1-fake.zip) (OS X 10.10 tested)
-- [linux32](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux32_v2.2.1-fake.tar.gz) (untested)
+- [linux32](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux32_v2.2.1-fake.tar.gz) (Elementary OS tested)
 - [linux64](https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux64_v2.2.1-fake.tar.gz) (Arch Linux tested)
 
 ####Mac (working): 
@@ -42,8 +42,9 @@ OK, here's are some "v2.2.1-fake"-Cryptocat binaries to test the update procedur
 ####Windows (working): 
 ![Cryptocat win auto-update gif](http://i.giphy.com/yoJC2rfqFbOMnvwRpe.gif)
 
-####Linux32 (untested) / Linux64 (working): 
-Linux64 build works, **please provide feedback for linux32!**
+####Linux32 (working) / Linux64 (working): 
+Works and looks the same as above!  
+**Important:** You need to have `GLIBCXX_3.4.18` installed ([hard dependency of node-webkit](https://github.com/rogerwang/node-webkit/issues/1839)). If you are on a older Ubuntu or Elementary, use [this guide](http://ubuntuhandbook.org/index.php/2013/08/install-gcc-4-8-via-ppa-in-ubuntu-12-04-13-04/) to upgrade to GCC 4.8.
 
 ### What have you done with these fake binaries?
 The `package.json` file in these binaries has been modified to the version `2.2.1-fake`. When you start one of them, the update procedure in [`lib/updater.js`](lib/updater.js) checks the [`package.json`](package.json) that is hosted on GitHub within this folder. It will determine that your version of Cryptocat is outdated (`2.2.2` is newer), download a newer version (after hitting OK within the confirm-dialog), overwrite your old version and launch the new version.
@@ -105,6 +106,7 @@ node-webkit $ mocha
 ## Troubleshooting
 - `nodewebkit:src` gets stuck while downloading node-webkit binaries: Try to run `grunt nodewebkit` manually a few times until the download finishes and node-webkit bins are extracted into `tmp/cache`.
 - Wine sucks or doesn't work: Remove `winIco: DIRS.NWASSETS + 'logo.ico',` from the [`Gruntfile.js`](https://github.com/majodev/cryptocat/blob/master/src/node-webkit/Gruntfile.js#L136), then you don't need to install wine! However, it **won't inject the proper icon into Windows builds then**!
+- `./Cryptocat: /usr/lib/i386-linux-gnu/libstdc++.so.6: version GLIBCXX_3.4.18' not found (required by ./Cryptocat)`: `GLIBCXX_3.4.18` is a ([hard dependency of node-webkit](https://github.com/rogerwang/node-webkit/issues/1839)). Fix: Use [this guide](http://ubuntuhandbook.org/index.php/2013/08/install-gcc-4-8-via-ppa-in-ubuntu-12-04-13-04/) to upgrade to GCC 4.8.
 
 ## Known Bugs
 - **Temporary solution**: All errors are currently globally catched and logged to `YOUR_HOMEDIR/cryptocat-node-webkit-errors.log`
