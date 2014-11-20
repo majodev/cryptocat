@@ -102,8 +102,8 @@ node-webkit $ mocha
 ```
 
 ## Known Bugs
-* [--] Fix errors ([**without** globally catching all uncaught exceptions](https://github.com/rogerwang/node-webkit/issues/1699))
-	- **Temporary solution**: All errors are currently globally catched and logged to `YOUR_HOMEDIR/cryptocat-node-webkit-errors.log`
-	- [--] **Error**: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` **Unsolved, fix needed before global catching can be disabled.**
-	- [--] **Fatal**: Little Snitch may cause crash on block ([see this issue](https://github.com/rogerwang/node-webkit/issues/2585)) **Unsolved FATAL error, app crashes! Revert to a previous version of node-webkit?**
-	- [--] **BUG**: `node-webkit Helper` can have a pretty high CPU usage on long usage. Unresolved, Mac only? ([see this issue](https://github.com/LightTable/LightTable/issues/1088))
+- `mochaTest:dsaSignaturesTest` sometimes "explodes" when running `grunt make`, run these signature tests then manually...
+- **Temporary solution**: All errors are currently globally catched and logged to `YOUR_HOMEDIR/cryptocat-node-webkit-errors.log`
+- [--] **Error**: `TypeError: Cannot read property 'muc' of null at eval (.../js/cryptocat.js:1310:29)` **Unsolved, fix needed before global catching can be disabled.**
+- [--] **Fatal**: Little Snitch may cause crash on block ([see this issue](https://github.com/rogerwang/node-webkit/issues/2585)) **Unsolved FATAL error, app crashes! Revert to a previous version of node-webkit?**
+- [--] **BUG**: `node-webkit Helper` can have a pretty high CPU usage on long usage. Unresolved, Mac only? ([see this issue](https://github.com/LightTable/LightTable/issues/1088))

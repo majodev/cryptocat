@@ -65,22 +65,21 @@ module.exports = function(grunt) {
 				dest: DIRS.LOCAL + 'package.json',
 				fields: [{
 					packages: function() {
-						var rootPkg = require(DIRS.ROOT + 'package.json')
 						return {
 							'mac': {
-								'url': getFilename(REMOTE_UPDATE_DIR, 'mac', rootPkg.version, 'zip'),
+								'url': grunt.option('mac_remote'),
 								'dsa': grunt.option('DSAMac')
 							},
 							'win': {
-								'url': getFilename(REMOTE_UPDATE_DIR, 'win', rootPkg.version, 'zip'),
+								'url': grunt.option('win_remote'),
 								'dsa': grunt.option('DSAWin')
 							},
 							'linux32': {
-								'url': getFilename(REMOTE_UPDATE_DIR, 'linux32', rootPkg.version, 'tar.gz'),
+								'url': grunt.option('linux32_remote'),
 								'dsa': grunt.option('DSALinux32')
 							},
 							'linux64': {
-								'url': getFilename(REMOTE_UPDATE_DIR, 'linux64', rootPkg.version, 'tar.gz'),
+								'url': grunt.option('linux64_remote'),
 								'dsa': grunt.option('DSALinux64')
 							}
 						}
@@ -163,7 +162,7 @@ module.exports = function(grunt) {
 			},
 			'mac': {
 				options: {
-					archive: getFilename(DIRS.RELEASE, 'mac', grunt.option('pkg').version, 'zip'),
+					archive: '<%=grunt.option("mac_release")%>',
 					mode: 'zip'
 				},
 				files: [{
@@ -174,7 +173,7 @@ module.exports = function(grunt) {
 			},
 			'win': {
 				options: {
-					archive: getFilename(DIRS.RELEASE, 'win', grunt.option('pkg').version, 'zip'),
+					archive: '<%=grunt.option("win_release")%>',
 					mode: 'zip'
 				},
 				files: [{
@@ -185,7 +184,7 @@ module.exports = function(grunt) {
 			},
 			'linux32': {
 				options: {
-					archive: getFilename(DIRS.RELEASE, 'linux32', grunt.option('pkg').version, 'tar.gz'),
+					archive: '<%=grunt.option("linux32_release")%>',
 					mode: 'tgz'
 				},
 				files: [{
@@ -197,7 +196,7 @@ module.exports = function(grunt) {
 			},
 			'linux64': {
 				options: {
-					archive: getFilename(DIRS.RELEASE, 'linux64', grunt.option('pkg').version, 'tar.gz'),
+					archive: '<%=grunt.option("linux64_release")%>',
 					mode: 'tgz'
 				},
 				files: [{
@@ -214,7 +213,7 @@ module.exports = function(grunt) {
 				stderr: true
 			},
 			'sign_mac': {
-				command: './dsa/sign_update.sh ' + getFilename(DIRS.RELEASE, 'mac', grunt.option('pkg').version, 'zip') + ' dsa/dsa_priv.pem',
+				command: './dsa/sign_update.sh ' + '<%=grunt.option("mac_release")%>' + ' dsa/dsa_priv.pem',
 				options: {
 					callback: function setDSAMac(err, stdout, stderr, cb) {
 						grunt.option('DSAMac', stdout.trim())
@@ -223,7 +222,7 @@ module.exports = function(grunt) {
 				}
 			},
 			'sign_win': {
-				command: './dsa/sign_update.sh ' + getFilename(DIRS.RELEASE, 'win', grunt.option('pkg').version, 'zip') + ' dsa/dsa_priv.pem',
+				command: './dsa/sign_update.sh ' + '<%=grunt.option("win_release")%>' + ' dsa/dsa_priv.pem',
 				options: {
 					callback: function setDSAMac(err, stdout, stderr, cb) {
 						grunt.option('DSAWin', stdout.trim())
@@ -232,7 +231,7 @@ module.exports = function(grunt) {
 				}
 			},
 			'sign_linux32': {
-				command: './dsa/sign_update.sh ' + getFilename(DIRS.RELEASE, 'linux32', grunt.option('pkg').version, 'tar.gz') + ' dsa/dsa_priv.pem',
+				command: './dsa/sign_update.sh ' + '<%=grunt.option("linux32_release")%>' + ' dsa/dsa_priv.pem',
 				options: {
 					callback: function setDSAMac(err, stdout, stderr, cb) {
 						grunt.option('DSALinux32', stdout.trim())
@@ -241,7 +240,7 @@ module.exports = function(grunt) {
 				}
 			},
 			'sign_linux64': {
-				command: './dsa/sign_update.sh ' + getFilename(DIRS.RELEASE, 'linux64', grunt.option('pkg').version, 'tar.gz') + ' dsa/dsa_priv.pem',
+				command: './dsa/sign_update.sh ' + '<%=grunt.option("linux64_release")%>' + ' dsa/dsa_priv.pem',
 				options: {
 					callback: function setDSAMac(err, stdout, stderr, cb) {
 						grunt.option('DSALinux64', stdout.trim())
@@ -307,5 +306,19 @@ module.exports = function(grunt) {
 		var pkg = require('./package.json')
 
 		grunt.option('pkg', pkg)
+
+		// sets the filename pattern (via getFilename()) to grunt.option
+		// so these are useable within the tasks update_json, compress and shell:sign
+		grunt.option('mac_release', getFilename(DIRS.RELEASE, 'mac', grunt.option('pkg').version, 'zip'))
+		grunt.option('win_release', getFilename(DIRS.RELEASE, 'win', grunt.option('pkg').version, 'zip'))
+		grunt.option('linux32_release', getFilename(DIRS.RELEASE, 'linux32', grunt.option('pkg').version, 'tar.gz'))
+		grunt.option('linux64_release', getFilename(DIRS.RELEASE, 'linux64', grunt.option('pkg').version, 'tar.gz'))
+
+		grunt.option('mac_remote', getFilename(REMOTE_UPDATE_DIR, 'mac', grunt.option('pkg').version, 'zip'))
+		grunt.option('win_remote', getFilename(REMOTE_UPDATE_DIR, 'win', grunt.option('pkg').version, 'zip'))
+		grunt.option('linux32_remote', getFilename(REMOTE_UPDATE_DIR, 'linux32', grunt.option('pkg').version, 'tar.gz'))
+		grunt.option('linux64_remote', getFilename(REMOTE_UPDATE_DIR, 'linux64', grunt.option('pkg').version, 'tar.gz'))
+
 	})
+
 }
