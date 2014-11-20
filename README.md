@@ -29,7 +29,7 @@ Run `make mac` to build as a standalone Mac application. (After running `make ma
 Also available from the [Mac App Store](https://itunes.apple.com/app/cryptocat/id613116229?mt=12).
 
 ### node-webkit
-Run `make node-webkit` to build standalone apps for Windows, Mac OS X, Linux32 and Linux64. Auto-update information get automatically appended and is hosted at [`src/node-webkit/package.json`](src/node-webkit/package.json). Further information is available in [`src/node-webkit`](src/node-webkit). 
+Run `make node-webkit` to build standalone apps for Windows, Mac OS X, Linux32 and Linux64. Auto-update information is automatically appended and hosted in [`src/node-webkit/package.json`](src/node-webkit/package.json). Further information is available in [`src/node-webkit`](src/node-webkit). **Prerequisites:** Building is only supported on Mac OS X and Linux. [node.js](http://nodejs.org/) must be installed on your system. [Wine](https://www.winehq.org/) must be available in your `PATH` to build Windows binaries!
 
 ##Goals
 * XMPP **[DONE]** | [Discussion](https://github.com/cryptocat/cryptocat/issues/83), [Library](http://strophe.im)
