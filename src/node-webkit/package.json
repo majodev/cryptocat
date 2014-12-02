@@ -14,6 +14,7 @@
 	"inject-js-start": "mainInjectStart.js",
 	"inject-js-end": "mainInjectEnd.js",
 	"node-main": "mainNode.js",
+	"single-instance": false,
 	"window": {
 		"title": "Cryptocat",
 		"toolbar": false,
@@ -32,19 +33,19 @@
 	"packages": {
 		"mac": {
 			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_mac_v2.2.2.zip",
-			"dsa": "MCwCFHqZDXnQFtkxGnikknS3peU+6qQWAhRB7ZQDsuu0IQMXAry0N2Mq9GfUyQ=="
+			"dsa": "MCwCFGIzvvzy60KfXTDmX5T3UIWJ3ecNAhRSn1DNm5uXOGf6FFeag05r0fOnYg=="
 		},
 		"win": {
 			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_win_v2.2.2.zip",
-			"dsa": "MC0CFFH7HuCUNEjV2iXDG08NdIIOPaUuAhUAiZwirwwnSjdRxvecU5n+lwlvq3o="
+			"dsa": "MCwCFD85msswruutlimbDvDr915HkfcjAhRNRajQfs5waaPNFyXddL2gQAmaDQ=="
 		},
 		"linux32": {
 			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux32_v2.2.2.tar.gz",
-			"dsa": "MCwCFD9LaJMdC3Bwax5BLo9iQCnujn2jAhRrxULXo8EedL1mrcNsyVnvQfHgxw=="
+			"dsa": "MCwCFFKtb2qoXaDb+ky0A0cKxnxamBSlAhQ/eZskFirLIKo5UPKeP1oMfDsY4A=="
 		},
 		"linux64": {
 			"url": "https://dl.dropboxusercontent.com/u/2624630/cryptocat_nw_update_test/Cryptocat_linux64_v2.2.2.tar.gz",
-			"dsa": "MCwCFCfhpvV7sKqoHkvsVVJt0MVOA9woAhQP8EOXPuIk+MXfh668zVFTyxi0dQ=="
+			"dsa": "MCwCFB1TG7X3IMMgSsV+4uNGzTjGpNo6AhR6KVnRpgs6P3igAGliIpv5asqw3w=="
 		}
 	},
 	"dependencies": {
